@@ -1,0 +1,102 @@
+import { db, guardarProducto, storage } from './firebase.js';
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+
+const form_add = document.getElementById("form-agregar");
+
+// Función para mostrar feedback visual
+function showLoading(show) {
+  const submitBtn = form_add.querySelector('input[type="submit"]');
+  const loadingSpinner = document.getElementById('loading-spinner') || 
+    (() => {
+      const spinner = document.createElement('span');
+      spinner.id = 'loading-spinner';
+      spinner.className = 'spinner-border spinner-border-sm ms-2';
+      spinner.setAttribute('aria-hidden', 'true');
+      submitBtn.parentNode.insertBefore(spinner, submitBtn.nextSibling);
+      return spinner;
+    })();
+  
+  submitBtn.disabled = show;
+  loadingSpinner.style.display = show ? 'inline-block' : 'none';
+}
+
+// Función mejorada para subir imágenes
+async function uploadFileToStorage(file) {
+  try {
+    // Validación del archivo
+    if (!file) return null;
+    
+    if (!file.type.match('image.*')) {
+      throw new Error('Solo se permiten archivos de imagen');
+    }
+    
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      throw new Error('La imagen es demasiado grande (máximo 5MB)');
+    }
+
+    // Subir el archivo
+    const storageRef = ref(storage, `productos/${file.name}`);
+    //const storageRef = ref(storage, JSON.stringify({"otras":[],"principal":`${file.name}`}));
+
+    /* {'otras':['raton.png','raton(1).png','raton(2).png'], 
+            'principal':'mouse.png'
+            }
+    */
+    const snapshot = await uploadBytes(storageRef, file);
+    
+    // Obtener URL pública
+    return await getDownloadURL(snapshot.ref);
+  } catch (error) {
+    console.error('Error en uploadFileToStorage:', error);
+    throw error;
+  }
+}
+
+// Evento submit mejorado
+form_add.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showLoading(true);
+
+  try {
+    // Obtener valores del formulario
+    const nombre = form_add["select_prod"].value || form_add["name_prod"].value;
+    const cant = form_add["cantidad"].value;
+    const mark = form_add["marca"].value;
+    const categorias = form_add["categoriastodas"].value
+    const details = form_add["detalles"].value;
+    const obs = form_add["observaciones"].value;
+    const fecha = new Date();
+    const file = form_add['foto'].files[0];
+
+    // Validaciones básicas
+    if (!nombre || !cant) {
+      throw new Error('Nombre y cantidad son campos requeridos');
+    }
+
+    // Subir imagen si existe
+    let imagenUrl = "";
+    if (file) {
+      try {
+        imagenUrl = await uploadFileToStorage(file);
+      } catch (uploadError) {
+        console.error("Error subiendo imagen:", uploadError);
+        throw new Error(`Error al subir la imagen: ${uploadError.message}`);
+      }
+    }
+
+    // Guardar producto en Firestore
+    await guardarProducto(nombre, cant, mark, categorias, details, obs, imagenUrl, fecha);
+    
+    // Feedback al usuario
+    form_add.reset();
+    alert("✅ Producto guardado exitosamente");
+    cerrarDialog('agregar');
+    
+  } catch (error) {
+    console.error("Error en el proceso completo:", error);
+    alert(`❌ Error: ${error.message}`);
+  } finally {
+    showLoading(false);
+  }
+});

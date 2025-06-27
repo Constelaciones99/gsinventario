@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <title>GENERAL</title>
+    <style>
+        @font-face {
+            font-family: printer;
+            src: url(fuentes/printer.ttf);
+        }
+        @font-face {
+            font-family: Monaco;
+            src: url(fuentes/Monaco.ttf);
+        }
+        html{
+            ::-webkit-scrollbar{
+                display: none
+            };
+        }
+        .card{
+            scale: .97;
+        }
+        img{
+            cursor: pointer;
+            transition: scale .5s;
+        }
+        img:hover{
+            scale: 1.08;
+        }
+        #titulo-buscar{
+            color: #404040;
+        }
+        input{
+            outline: none;
+            border:2px #ac8504 solid;
+            text-transform: capitalize;
+        }
+        dialog{
+            border:none;
+            border-radius: 10px;
+            box-shadow: 0px 0px 5px 1px #242424;
+            z-index: 1000; /* Opcional, por si se esconde detrás de otros elementos */
+        }
+        #dialog-editar form input{
+            font-size: 16px;
+            padding: 3px 5px;
+        }
+
+        textarea{
+            resize: none;
+            line-height: 16px;
+            font-size: 15px;
+        }
+        dialog form input{
+            border: .2px solid;
+            border-radius: 5px;
+        }
+        .confirm-delete-text{
+        }
+        #form-ver{
+            line-height: 10px;
+        }
+        .ver-producto-texto{
+        }
+        ul li{
+            list-style: none;
+        }
+        #titulo-buscar{
+            font-family: printer;
+        }
+        #nombre-productos{
+            font-family: Monaco;
+        }
+        span#eliminar-id{
+            text-transform: capitalize;
+        }
+        #dialog-carrusel {
+            width: 70vw;  /* Puedes ajustar el tamaño que desees */
+            height: 50vh;
+            max-width: 800px;
+            max-height: 600px;
+            padding: 0;
+        }
+
+        #dialog-carrusel img {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+        #carousel-inner {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            max-width: 100%;
+            padding: 1rem;
+        }
+        #carousel-inner img {
+            object-fit: contain;
+            max-height: 150px;
+        }
+        #cerrar_carrusel{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="bg-warning rounded-bottom-4 px-5">
+            <p class="row">
+
+                <div class="col-12 btn-group w-100">
+                    <div class="row">
+                        <p class="btn fs-2 text-white col-3 ps-0 ms-0" id="titulo-buscar">Buscar: </p>
+                    </div>
+                    <p class="row btn d-flex justify-content-start pe-0">
+                        <input type="text" class="ms-0 w-100 col-12 fs-3 rounded-2 pe-1" id="buscador" placeholder="Nombre de producto, etc.">
+                    </p>
+                </div>
+            </p>
+        </header>
+        <div class="sub-content">
+            <ul id="respuestas">
+            </ul>
+        </div>
+        <div class="row" id="contenidoCargado">
+        </div>
+    </div>
+
+    <dialog id="dialog-eliminar">
+            <form action="#" class="text-center">
+                <span class="confirm-delete-text fs-5">¿Seguro que deseas <b class="text-danger">eliminar</b> este producto?</span><hr>
+                <span id="eliminar-id" class="fw-bold fs-4"></span>|
+                <span id="eliminar-nombre" class="fs-5"></span>
+                    <hr>
+                <span class="d-flex justify-content-center">
+                    <button class="btn btn-secondary mx-2 fw-bold" onclick="cerrar_dialog('eliminar')"> CANCELAR</button>
+                <button class="btn btn-danger fw-bold">ELIMINAR</button>
+                </span>
+            </form>
+    </dialog>
+
+    <dialog id="dialog-editar">
+            <span class="fw-bold">
+                📝Editar Producto
+            </span>
+            <form action="#" class="text-center">
+                <hr>
+                <h3 id="editar-id">PROD-0004</h3>
+                <hr>
+                <img src="img/agotado.png" id="editar-foto" style="width: 5rem;"><br>
+                <input type="text" class="mb-1 fs-5 " id="editar-nombre" placeholder="Nombre"><br>
+                <input type="text" class="mb-1 fs-5 " id="editar-marca"  placeholder="Marca"><br>
+                <input type="number" class="mb-1 fs-5 " id="editar-cantidad"  placeholder="Cantidad"><hr>
+                <span id="editar-categorias"></span>
+                <hr>
+                <span class="vw-100 text-start border">Detalles:</span>
+                <textarea name="" id="editar-observaciones" class="w-100" placeholder="observaciones"></textarea><br>
+                <textarea name="" id="editar-detalles" class="w-100" placeholder="detalles"></textarea><br>
+                <hr>
+                <button  class="btn btn-secondary" onclick="cerrar_dialog('editar')">CERRAR</button>
+                <button  class="btn btn-success" >GUARDAR CAMBIOS</button>
+            </form>
+    </dialog>
+
+    <dialog id="dialog-ver" class="">
+            <span class="ver-producto-texto fw-bold">🕵️Ver Producto</span>
+            <form action="#" id="form-ver" class="text-center">
+               <h3 id="ver-id">PROD-0003</h3>
+               <hr>
+               <img src="img/agotado.png" id="ver-foto" style="width: 5rem;">
+               <hr>
+                <input id="ver-nombre" class="fs-4 fw-bold text-center border-0" value="" disabled> <br>
+                <input id="ver-marca" class="fs-5 text-center border-0" value="" disabled> <br>
+                <input id="ver-cantidad" class="fs-5 text-center border-0" value="" disabled><hr>
+                    <span id="ver-categorias"></span>
+                <hr>
+                <textarea
+                 id="ver-detalles" class="border-0 text-center" disabled>*Asignado a todo el personal</textarea
+                    ><br>
+                <textarea id="ver-observaciones" class="text-center border-0" disabled>*Producto nuevo</textarea>
+                <hr>
+                <input type="button" class="btn btn-primary fw-bold" value="CERRAR DIALOGO" onclick="cerrar_dialog('ver')">
+            </form>
+    </dialog>
+
+    <dialog id="dialog-carrusel">
+        <p class="text-end text-secondary me-3 fw-bold fs-3" id="cerrar_carrusel" onclick="cerrar_dialog('carrusel')">✕</p>   
+        <div id="carouselExampleIndicators" class="carousel slide">
+        <div id="carousel-inner">
+            <div class="carousel-item active">
+                <img src="img/raton.png" class="d-block w-100">
+            </div>
+            <div class="carousel-item">
+                <img src="img/raton(1).png" class="d-block w-100">
+            </div>
+            <div class="carousel-item">
+                <img src="img/raton(2).png" class="d-block w-100">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-secondary" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        </div>
+    </dialog>
+
+    <script src="inventario.js"></script>
+    <script>
+
+        contenido=document.getElementById("contenidoCargado")
+        contenido_buscar=document.getElementById("buscador")
+        rptas=document.getElementById("respuestas")
+        slider=document.getElementById("carousel-inner")
+
+        colores=["success","warning","danger","primary","secondary","info","dark"]
+
+        window.addEventListener("DOMContentLoaded",cargar_productos())
+        
+        function cargar_productos(){
+            contenido.innerHTML=""
+            productosTodos.forEach(function(product, index){
+            contenido.innerHTML +=`
+                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2">
+                <div class="row d-flex justify-content-center  rounded-2">
+                        <span class=" border
+                        border-secondary border-top-0 
+                        border-start-0
+                        border-end-0
+                        border-bottom-1
+                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${product.nombre} </span>
+                        <span id="id_hidden">${index}.</span>
+                        <img src="img/${product.foto["principal"]}" class="py-1" style="width: 8rem;" onclick="showCarousel(${index})">
+                </div>
+                <div class="row rounded-2 p-0">
+                    <span class="btn-group">
+                        <p class="col-4 border btn btn-danger fw-bold"   onclick="abrir_dialog('eliminar',${index})">🗑️</p>
+                        <p class="col-4 border btn btn-success fw-bold" onclick="abrir_dialog('editar',${index})">✍️</p>
+                        <p class="col-4 border btn btn-primary fw-bold" onclick="abrir_dialog('ver',${index})" >👁️‍🗨️</p>
+                    </span>
+                </div>
+            </div>
+            `
+        })
+        }
+
+        const showCarousel=function(indice){
+            slider.innerHTML=""
+            document.getElementById("dialog-carrusel").showModal()
+            productosTodos[indice].foto['otras'].forEach((fotos, index)=>{
+                cond=""
+                if(index==0){
+                    cond="active"
+                }
+                slider.innerHTML +=`
+                    <div class="carousel-item ${cond}">
+                        <img src="img/${fotos}" class="d-block" alt="...">
+                    </div>
+                `
+           })
+        }
+
+        document.querySelector(".carousel-control-next").onclick=()=>{
+            //alert("adelante!")
+        }
+
+
+        const abrir_dialog=function(tipo, indice){
+            document.getElementById(`dialog-${tipo}`).showModal()
+            
+            productosTodos.forEach((prod=>{
+                if(tipo=="eliminar"){
+                document.getElementById("eliminar-id").textContent=prod.id
+                document.getElementById("eliminar-nombre").textContent=prod.nombre
+                }
+
+                if(prod.id==productosTodos[indice].id){
+
+                    document.getElementById(`${tipo}-id`).textContent=prod.id
+                    document.getElementById(`${tipo}-foto`).src="img/"+prod.foto["principal"]
+                    document.getElementById(`${tipo}-nombre`).value=prod.nombre
+                    document.getElementById(`${tipo}-marca`).value=prod.marca
+                    document.getElementById(`${tipo}-cantidad`).value=prod.cantidad
+                    document.getElementById(`${tipo}-detalles`).textContent=prod.detalle
+                    document.getElementById(`${tipo}-observaciones`).textContent=prod.observ
+
+                    if(prod.categorias){
+                        document.getElementById(`${tipo}-categorias`).innerHTML=""
+                        prod.categorias.forEach((badge)=>{
+                            document.getElementById(`${tipo}-categorias`).innerHTML +=`
+                            <span class="badge text-bg-${colores[Math.trunc(Math.random(0,6)*10)]}">${badge}</span>
+                        `
+                        })
+                    }
+
+                }
+            }))
+        }
+        
+        const cerrar_dialog=function(tipo){
+            document.getElementById(`dialog-${tipo}`).close()
+        }
+
+        contenido_buscar.addEventListener("keyup",function(){
+                cant_res=0
+                memo_letra=contenido_buscar.value.length
+                contenido.innerHTML=""
+                rptas.innerHTML=""
+
+               productosTodos.forEach((element, index)=>{
+                if(element["nombre"].slice(0,memo_letra)==contenido_buscar.value){
+                    if(memo_letra==0){
+                        rptas.innerHTML=""
+                        cargar_productos()
+                        return
+                    }
+                    cant_res++
+
+                    contenido.innerHTML +=`
+                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2">
+                <div class="row d-flex justify-content-center  rounded-2">
+                        <span class=" border
+                        border-secondary border-top-0 
+                        border-start-0
+                        border-end-0
+                        border-bottom-1
+                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4 "> ${element.nombre} </span>
+                        <span id="id_hidden">${index}.</span>
+                        <img src="img/${element.foto["principal"]}" class="py-1" style="width: 8rem;">
+                </div>
+                <div class="row rounded-2 p-0">
+                    <span class="btn-group">
+                        <p class="col-4 border btn btn-danger fw-bold"   onclick="abrir_dialog('eliminar',${index})">🗑️</p>
+                        <p class="col-4 border btn btn-success fw-bold" onclick="abrir_dialog('editar',${index})">✍️</p>
+                        <p class="col-4 border btn btn-primary fw-bold" onclick="abrir_dialog('ver',${index})" >👁️‍🗨️</p>
+                    </span>
+                </div>
+            </div>
+            `
+            
+                }
+                
+            })
+            
+            if(cant_res==0){
+                rptas.innerHTML=`<li> Aún no hay resultados</li>`
+            }
+        })
+
+    </script>
+
+    
+</body>
+</html>

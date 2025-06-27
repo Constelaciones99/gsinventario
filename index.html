@@ -1,0 +1,325 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>INVENTARIO</title>
+  <style>
+    @font-face {
+      font-family: avigea;
+      src: url(fuentes/Avigea.ttf);
+    }
+    @font-face {
+      font-family: basilik;
+      src: url(fuentes/basilik.ttf);
+    }
+    @font-face {
+      font-family: bohemian;
+      src: url(fuentes/bohemian.otf);
+    }
+    @font-face {
+      font-family: carena;
+      src: url(fuentes/carena.otf);
+    }
+    body, html {
+      margin: 0;
+      padding: 5px 0px 15px 0px ;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .full-height {
+      height: 100vh;
+    }
+    .section {
+      flex: 1;
+      padding: 0.5rem;
+    }
+    .img-btn {
+      width: 7.5em;
+      border-radius: 0.5rem;
+      margin: 0px 25px;
+      cursor: pointer;
+    }
+
+    .img-group {
+      gap: 1rem;
+      display: flex;
+    }
+    dialog {
+      border: none;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    #verTodo{
+            border: 2px solid #242424;
+            width: auto;
+            border-radius: 20px;
+            transition: scale  1s;
+            text-decoration: none;
+            color: #242424;
+        }
+        #verTodo:hover{
+            scale: 1.02;
+            cursor: pointer;
+        }
+
+    @media (min-width: 992px) {
+      .layout {
+        flex-direction: row;
+      }
+      .img-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      .img-btn {
+        width: 9em;
+      }
+    }
+
+    li{
+      list-style: none;
+    }
+
+    @media (max-width: 991.98px) {
+      .layout {
+        flex-direction: column;
+      }
+      .img-group {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    #titulo_pagina{
+      font-family: carena;
+      font-size: 3.4rem;
+    }
+
+    @keyframes dancing{
+      40%{
+        scale: 1.025s;
+      }
+      50%{
+        scale: 1.05;
+      }
+    }
+
+    #seccion{
+      background: linear-gradient(90deg, #fff, cornsilk, #fff);
+    }
+
+    
+
+  </style>
+</head>
+<body>
+  <div class="container d-flex flex-column full-height rounded-5" >
+    <!-- Header -->
+    <header class=" text-center py-2">
+      <div class="d-flex justify-content-center align-items-center">
+        
+        <h5 class="m-0 text-warning" id="titulo_pagina">Materiales</h5>
+      </div>
+    </header>
+
+    <!-- Cuerpo principal -->
+    <div class="flex-grow-1 d-flex layout" id="seccion">
+
+      <!-- Sección Izquierda -->
+      <div class="section d-flex flex-column align-items-center justify-content-center">
+        <div class="img-group">
+          <img src="img/buscare.png" style="animation: dancing 1.5s ease-out infinite;" class="img-btn" onclick="abrirDialog('buscar')" data-img="buscar">
+          <img src="img/agregar-producto.png" style="animation: dancing  1.5s .2s ease-out infinite;" data-img="Agregar" class="img-btn" onclick="abrirDialog('agregar')">
+        </div>
+      </div>
+
+      <!-- Sección Central -->
+      <div class="section d-flex flex-column align-items-center justify-content-center text-center">
+        <img src="img/inventario.png" style="animation: dancing 1.5s .8s ease-out infinite;" class="img-btn mb-2 bg-transparent border-0" alt="Inventario">
+        <a href="prev.html" class="fw-bold fs-6 text-dark bg-warning px-2 py-1 rounded" id="verTodo">VER INVENTARIO</a>
+        <p class="mt-1" id="descripcion">...</p>
+      </div>
+
+      <!-- Sección Derecha -->
+      <div class="section d-flex flex-column align-items-center justify-content-center">
+        <div class="img-group">
+          <img src="img/devolucion-de-producto.png" style="animation: dancing 1.5s .4s ease-out infinite;" data-img="Editar" class="img-btn" onclick="abrirDialog('editar')">
+          <img src="img/eliminar-producto.png" style="animation: dancing 1.5s .6s ease-out infinite;" data-img="Eliminar" class="img-btn" onclick="abrirDialog('eliminar')">
+        </div>
+      </div>
+    </div>
+
+    <!-- DIALOGOS -->
+    <dialog id="dialog-buscar">
+      <p class="fs-4 fw-bold">🔍 BUSCAR PRODUCTO</p>
+      <input type="text" class="form-control mb-2" placeholder="ID o nombre del producto">
+      <div class="text-end">
+        <button class="btn btn-secondary" onclick="cerrarDialog('buscar')">Cancelar</button>
+        <button class="btn btn-warning text-dark">Buscar</button>
+      </div>
+    </dialog>
+
+    <dialog id="dialog-agregar" class="w-75">
+      <form class="" enctype="multipart/form-data" id="form-agregar">
+                    <h5 class="fw-bold text-center">AGREGAR PRODUCTO</h5>
+                    <hr>
+                       <input type='text' name='id_prod' class='form-control mb-2 fw-bold' value="PROD-001" disabled>
+
+                    
+                    <label>Seleccionar producto:</label>
+                    <select class="form-select mb-2" onchange="verificar()" id="menu-prod" name="select_prod">
+                    <option value="">--Seleccionar--</option>
+                    <option>mouse</option>
+                    <option>teclado</option>
+                    <option>audifono</option>
+                    <option>pantalla</option>
+                    <option>cable VGA</option>
+                    <option>cable HDMI</option>
+                    <option>FUENTE</option>
+                    <option>memoria RAM</option>
+                    <option>PC</option>
+                    <option>Repetidor</option>
+                    </select>
+                    
+                    <input type="text" class="form-control mb-2" required placeholder="| Producto" id="item-producto" name="name_prod">
+                    <hr>
+                    <input type="number" class="form-control mb-2" required placeholder="| Cantidad" min="0" name="cantidad">
+                    <input type="text" class="form-control mb-2" placeholder="| Marca" name="marca">
+                    <hr>
+                    <input type="text" id="selects" name="categoriastodas" >
+                    <ul id="lista">
+                    <li><input type="checkbox" class="cat" data-categoria="periferico de entrada">periferico de entrada</li>
+                    <li><input type="checkbox" class="cat" data-categoria="periferico de salida">periferico de salida</li>
+                    <li><input type="checkbox" class="cat" data-categoria="componente externo">componente externo</li>
+                    <li><input type="checkbox" class="cat" data-categoria="componente interno">componente interno</li>
+                    <li><input type="checkbox" class="cat" data-categoria="dispositivo de almacenamiento">dispositivo de almacenamiento </li>
+                    <li><input type="checkbox" class="cat" data-categoria="conector">conector </li>
+                    <li><input type="checkbox" class="cat" data-categoria="dispositivo de red">dispositivo de red </li>
+                    <li><input type="checkbox" class="cat" data-categoria="adaptador">adaptador </li>
+                    </ul>
+
+                    <hr>
+                    <label>Detalles:</label>
+                    <textarea class="form-control mb-2" placeholder="-Asignado a usuario..." name="detalles"></textarea>
+                    <label>Observaciones:</label>
+                    <textarea class="form-control mb-2" placeholder="-Tiene el cable pelado" name="observaciones"></textarea>
+                    <div class="d-flex justify-content-end mb-2">
+                      <hr>
+                    <!-- <button class="btn btn-success"></button> -->
+                     <input type="file" value="AGREGAR FOTO 📷" class="btn btn-success" name="foto">
+                    <hr>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary me-2" onclick="cerrarDialog('agregar')">⬅️CANCELAR</button>
+                    <!-- <button type="submit" class="btn btn-warning text-dark">💾GUARDAR</button> -->
+                     <input type="submit" class="btn btn-warning text-dark" value="💾GUARDAR">
+                    </div>
+        </form>
+    </dialog>
+
+    <dialog id="dialog-editar" >
+      <p class="fs-4 fw-bold">✏️ EDITAR PRODUCTO</p>
+      <select class="form-select mb-2">
+        <option>Producto 1</option>
+        <option>Producto 2</option>
+      </select>
+      <input type="text" class="form-control mb-2" placeholder="Nuevo nombre">
+      <div class="text-end">
+        <button class="btn btn-secondary" onclick="cerrarDialog('editar')">Cancelar</button>
+        <button class="btn btn-primary">Actualizar</button>
+      </div>
+    </dialog>
+
+    <dialog id="dialog-eliminar">
+      <p class="fs-4 fw-bold text-danger">🗑️ ELIMINAR PRODUCTO</p>
+      <select class="form-select mb-2">
+        <option>Producto 1</option>
+        <option>Producto 2</option>
+      </select>
+      <div class="text-end">
+        <button class="btn btn-secondary" onclick="cerrarDialog('eliminar')">Cancelar</button>
+        <button class="btn btn-danger">Eliminar</button>
+      </div>
+    </dialog>
+
+  </div>
+
+  <script type="module" src="index.js"></script>
+
+  <script>
+    var description=document.getElementById("descripcion")
+    var menu=document.getElementById("menu-prod")
+    var nombre_producto=document.getElementById("item-producto")
+    var cats=document.getElementsByClassName("cat")
+    var items=document.getElementById("selects")
+
+    items.value=JSON.stringify(["sin categorias"])
+
+    categorias=[]
+
+        for(i=0;i<cats.length;i++){
+              cats[i].onclick=function(item){
+
+                if(items.value==JSON.stringify(["sin categorias"])){
+                  categorias=[]
+                }
+
+                  if(item.target.checked){
+                    categorias.push(item.target.dataset.categoria)
+                  items.value=JSON.stringify(categorias)
+                  }else{
+                    num=categorias.indexOf(item.target.dataset.categoria)
+                    categorias.splice(num,1)
+                    if(items.value=='[]'){
+                        categorias=["sin categorias"]
+                        items.value=["sin categorias"]
+                      }
+                    items.value=JSON.stringify(categorias)
+                  }
+
+              }
+        }
+
+
+    document.body.addEventListener("mouseover",opc=>{
+            if(!opc.target.dataset.img)return
+            description.textContent=opc.target.dataset.img
+        })
+
+    const abrirDialog=tipo=>{
+      document.getElementById(`dialog-${tipo}`).showModal();
+    }
+
+    const cerrarDialog=tipo=>{
+      document.getElementById(`dialog-${tipo}`).close();
+    }
+
+    const verificar=function(){
+            if(menu.selectedIndex>0){
+                nombre_producto.value=""
+                nombre_producto.disabled=true
+            }else{
+                nombre_producto.disabled=false
+            }
+        }
+  </script>
+</body>
+</html>
+
+
+
+<!-- rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+} -->
+

@@ -1,0 +1,75 @@
+::-webkit-scrollbar{
+            display: none;
+        }
+
+        body{
+            overflow: hidden;
+        }
+
+
+        #titulo{
+            font-weight: bold;
+            font-size: 2.5em;
+        }
+        #img-icon{
+            width: 5em;
+            height: 4em;
+        }
+        #img-select{
+            transition: scale  1s;
+        }
+        #img-select:hover{
+            scale: 1.1;
+            cursor: pointer;
+        }
+        #descripcion{
+            font-size: 19px;
+        }
+        header{
+            border-bottom: 5px #fff solid;
+        }
+        #verTodo{
+            border: 2px solid #242424;
+            width: auto;
+            border-radius: 20px;
+            transition: scale  1s;
+            text-decoration: none;
+            color: #242424;
+        }
+        #verTodo:hover{
+            scale: 1.02;
+            cursor: pointer;
+        }
+        textarea{
+            resize: none;
+            width: 400px;
+            text-transform: capitalize;
+        }
+        dialog{
+            background: #eee;
+            border: none;
+            box-shadow: #242424 0px 0px 10px 1px;
+            z-index: 9999;
+        }
+        #dialog-agregar{
+            margin-top: -30%;
+        }
+        #dialog-buscar{
+            width: 450px;
+        }
+        #dialog-editar{
+            position: absolute;
+            top: 20%;
+        }
+        #text-update{
+            color: #d3aa05;
+        }
+        #dialog-eliminar{
+        }
+        p#buscar{
+            color: #f1b40c;
+        }
+        
+        input[type="text"]{
+            text-transform: capitalize;
+        }
