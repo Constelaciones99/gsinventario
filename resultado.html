@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Document</title>
-</head>
-        <style>
+    <style>
               @font-face {
             font-family: printer;
             src: url(fuentes/printer.ttf);
@@ -120,33 +119,14 @@
         }
 
         </style>
+</head>
 <body>
 
     <div class="container">
-        <header class="bg-warning rounded-bottom-4 px-5">
-            <p class="row">
-
-                <div class="col-12 btn-group w-100">
-                    <div class="row">
-                        <p class="btn fs-2 text-white col-3 ps-0 ms-0" id="titulo-buscar">Buscar: </p>
-                    </div>
-                    <p class="row btn d-flex justify-content-start pe-0">
-                        <input type="text" class="ms-0 w-100 col-12 fs-3 rounded-2 pe-1" id="buscador"  placeholder="Nombre de producto, etc.">
-                    </p>
-                </div>
-            </p>
-        </header>
-            <div class="sub-content">
-                    <ul id="respuestas">
-                    </ul>
-            </div>
-
-        <div class="row" id="contenidoCargado">
-            
-        </div>
+        <div class="row" id="response"></p>
     </div>
 
-    
+     
     <dialog id="dialog-eliminar">
             <form action="#" class="text-center">
                 <span class="confirm-delete-text fs-5">¿Seguro que deseas <b class="text-danger">eliminar</b> este producto?</span><hr>
@@ -191,7 +171,6 @@
                 <hr>
                 <span class="vw-100 text-start">Detalles:</span>
                 <textarea name="observacion" id="editar-observaciones" class="w-100" placeholder="observaciones"></textarea><br>
-                <span class="vw-100 text-start">Observaciones:</span>
                 <textarea name="detalles" id="editar-detalles" class="w-100" placeholder="detalles"></textarea><br>
                 <hr>
                 <button  class="btn btn-secondary" id="cerrarDialogEdit">CERRAR</button>
@@ -236,11 +215,13 @@
         </button>
         </div>
     </dialog>
+    
+<script type="module">
 
-    <script type="module">
+    import {obtenerProd, listaProd, eliminarProd, elemento, db} from './firebase.js'
+    import {doc, updateDoc, getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
 
-        import {obtenerProd, listaProd, eliminarProd, elemento, db} from './firebase.js'
-        import {doc, updateDoc, getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
+
 
         var cont=document.getElementById("contenidoCargado")
         var contenido_buscar=document.getElementById("buscador")
@@ -258,44 +239,37 @@
 
         var colores=["success","warning","danger","primary","secondary","info","dark"]
         
-        
 
-        window.addEventListener("DOMContentLoaded", resp=>{
-            listaProd((querySnapshot)=>{
-                 let html=""
-                querySnapshot.forEach((doc)=>{
-                    html +=`
-                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2">
+    var miProducto=JSON.parse(localStorage.getItem("producto"))
+    document.getElementById("response").innerHTML=`<div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2">
                 <div class="row d-flex justify-content-center  rounded-2">
                         <span class=" border
                         border-secondary border-top-0 
                         border-start-0
                         border-end-0
                         border-bottom-1
-                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
-                        <span id="id_hidden">${doc.id}</span>
-                        <img src=${doc.data().imagenes["principal"]} class="py-1" style="width: 8rem;" data-img="${doc.id}" id="btnImage">
+                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${miProducto.nombre} </span>
+                        <span id="id_hidden">${miProducto.id}</span>
+                        <img src=${miProducto.imagenes.principal} class="py-1" style="width: 8rem;" data-img="${miProducto.id}" id="btnImage">
                 </div>
                 <div class="row rounded-2 p-0">
                     <span class="btn-group">
-                        <p class="col-4 border btn btn-danger fw-bold"  id="btn-eliminar" data-eliminar="${doc.id}">🗑️</p>
-                        <p class="col-4 border btn btn-success fw-bold" id="btn-editar" data-editar="${doc.id}">✍️</p>
-                        <p class="col-4 border btn btn-primary fw-bold" id="btn-ver" data-ver="${doc.id}" >👁️‍🗨️</p>
+                        <p class="col-4 border btn btn-danger fw-bold"  id="btn-eliminar" data-eliminar="${miProducto.id}">🗑️</p>
+                        <p class="col-4 border btn btn-success fw-bold" id="btn-editar" data-editar="${miProducto.id}">✍️</p>
+                        <p class="col-4 border btn btn-primary fw-bold" id="btn-ver" data-ver="${miProducto.id}" >👁️‍🗨️</p>
                     </span>
                 </div>
-            </div>
-            `           
-                    
-            cont.innerHTML=html
+            </div>`
+
             
             var sliderhtml=""
             document.querySelectorAll("#btnImage").forEach((img)=>{
                 img.addEventListener("click", function(evt){
                     document.getElementById("dialog-carrusel").showModal()
                     sliderhtml=""
-                querySnapshot.forEach((doc)=>{
-                    if(doc.id==evt.target.dataset.img){
-                        doc.data().imagenes.otras.forEach(dat=>{
+               
+                    
+                        miProducto.imagenes.otras.forEach(dat=>{
                             sliderhtml +=`
                         <div class="carousel-item">
                             <img src="img/${dat}" class="d-block">
@@ -304,53 +278,51 @@
                         })
                         slider.innerHTML=sliderhtml
                         document.querySelectorAll(".carousel-item")[0].classList.add("active")
-                    }
-                })
+                    
+                
                 })
             })
 
+            document.getElementById("cerrar_carrusel").addEventListener("click",function(){
+                document.getElementById("dialog-carrusel").close()
+
+        })
            
+/*****************************ABRIR MODAL DE  VER ***************/
 
             document.querySelectorAll("#btn-ver").forEach(elementVer=>{
               elementVer.addEventListener("click",({target:{dataset}})=>{
 
-                  document.getElementById("ver-categorias").innerHTML=""
-              document.getElementById("dialog-ver").showModal();
+                document.getElementById("ver-categorias").innerHTML=""
+                document.getElementById("dialog-ver").showModal();
 
-              querySnapshot.forEach((doc)=>{
-              if(doc.id==dataset.ver){
+                document.getElementById("ver-id").textContent=miProducto.id
+                document.getElementById("ver-foto").src=miProducto.imagenes["principal"]
+                document.getElementById("ver-nombre").value=miProducto.nombre
+                document.getElementById("ver-marca").value=miProducto.marca
+                document.getElementById("ver-cantidad").value=miProducto.cantidad
+                document.getElementById("ver-detalles").textContent=miProducto.detalles
+                document.getElementById("ver-observaciones").textContent=miProducto.observacion
 
-              document.getElementById("ver-id").textContent=doc.id
-              document.getElementById("ver-foto").src=doc.data().imagenes["principal"]
-              document.getElementById("ver-nombre").value=doc.data().nombre
-              document.getElementById("ver-marca").value=doc.data().marca
-              document.getElementById("ver-cantidad").value=doc.data().cantidad
-              document.getElementById("ver-detalles").textContent=doc.data().detalles
-              document.getElementById("ver-observaciones").textContent=doc.data().observacion
-
-              doc.data().categoria.forEach((badge)=>{
+              miProducto.categoria.forEach((badge)=>{
                       document.getElementById("ver-categorias").innerHTML +=`
                       <span id="badge" class="badge text-bg-${colores[Math.trunc(Math.random(0,6)*10)]}">${badge}</span>
                   `
                           })
-                      }
-                  })
               })
           })
 
-            document.querySelectorAll("#btn-eliminar").forEach((element)=>{
+          /***************ABRIR MODAL DE ELIMINAR*********************************/
+        document.querySelectorAll("#btn-eliminar").forEach((element)=>{
           element.addEventListener("click",({target:{dataset}})=>{
-          document.getElementById("dialog-eliminar").showModal()
-          querySnapshot.forEach((doc)=>{
-              if(doc.id==dataset.eliminar){
-                  document.getElementById("eliminar-id").textContent=doc.id
-                  document.getElementById("eliminar-nombre").textContent=doc.data().nombre
-                      }
-                  })
+          document.getElementById("dialog-eliminar").showModal()    
+                  document.getElementById("eliminar-id").textContent=miProducto.id
+                  document.getElementById("eliminar-nombre").textContent=miProducto.nombre
+
               })
           })
 
-          //BTN-EDITAR
+        /*******************ABRIR MODAL DE EDITAR*******************************************/
             document.querySelectorAll("#btn-editar").forEach(elementEdit=>{
 
                 document.querySelectorAll(".cat").forEach((gato)=>{
@@ -365,95 +337,34 @@
                     pro.checked=false
             })
                 
-              querySnapshot.forEach((doc)=>{
-              if(doc.id==dataset.editar){
-                  document.getElementById("editar-id").textContent=doc.id
-                  document.getElementById("editar-foto").src=doc.data().imagenes["principal"]
-                  document.getElementById("editar-nombre").value=doc.data().nombre
-                  document.getElementById("editar-marca").value=doc.data().marca
-                  document.getElementById("editar-cantidad").value=doc.data().cantidad
-                  document.getElementById("editar-detalles").textContent=doc.data().detalles
-                  document.getElementById("editar-observaciones").textContent=doc.data().observacion
+              
+                  document.getElementById("editar-id").textContent=miProducto.id
+                  document.getElementById("editar-foto").src=miProducto.imagenes["principal"]
+                  document.getElementById("editar-nombre").value=miProducto.nombre
+                  document.getElementById("editar-marca").value=miProducto.marca
+                  document.getElementById("editar-cantidad").value=miProducto.cantidad
+                  document.getElementById("editar-detalles").textContent=miProducto.detalles
+                  document.getElementById("editar-observaciones").textContent=miProducto.observacion
                     
 
                     document.querySelectorAll(".cat").forEach((gato)=>{
-                            doc.data().categoria.forEach((y)=>{
+                            miProducto.categoria.forEach((y)=>{
                                 if(y==gato.dataset.categoria){
                                     gato.checked=true
                                     }
                                 })
                             })
-                        }
-                    })
+                        
                 })
             })
 
 
-            
-        })
-    })
-})
-
-
-        document.getElementById("cerrar_carrusel").addEventListener("click",function(){
-                document.getElementById("dialog-carrusel").close()
-
-        })
-
-        function cerrar(e){
-    
+            function cerrar(e){
+            e.preventDefault()
             document.getElementById("dialog-eliminar").close();
             document.getElementById("dialog-editar").close();
             document.getElementById("dialog-ver").close();
-            e.preventDefault()
         }
-
-        btnDel.addEventListener("click",(e)=>{
-            eliminarProd(document.getElementById("eliminar-id").textContent)
-            cerrar(e)
-            alert("Producto Eliminado!")
-        })
-
-        /*ACTUALIZAR  NUEVOS DATOS*/
-        /*******************************/
-
-        //items.value=JSON.stringify(["sin categorias"])
-        document.getElementById("selects").value=JSON.stringify(["sin categorias"])
-        
-        btnEditar.addEventListener("click", async function(evt){
-        var categorias=[]
-
-        
-        
-        document.querySelectorAll(".cat").forEach((cb_categorias)=>{
-            if(cb_categorias.checked){
-                categorias.push(cb_categorias.dataset.categoria)
-            }
-        })
-
-        if(categorias.length==0){
-            categorias=["sin categorias"]
-        }
-        //alert(JSON.stringify(categorias))
-            try{
-                const docRef=doc(db,"prueba",document.getElementById("editar-id").textContent)
-                await updateDoc(docRef,{
-                    nombre:document.getElementById("editar-nombre").value,
-                    marca:document.getElementById("editar-marca").value,
-                    cantidad:document.getElementById("editar-cantidad").value,
-                    categoria:categorias,
-                    detalles:document.getElementById("editar-detalles").value,
-                    observacion:document.getElementById("editar-observaciones").value,
-                    fecha:new Date()
-                })
-                    alert("producto actualizado!")
-                    cerrar()
-            }catch(error){
-                alert(error)
-            }
-        })
-
-       
 
         closeDialogDel.addEventListener("click",(e)=>{
             cerrar(e)
@@ -467,157 +378,63 @@
             cerrar(e)
         })
 
+        /*******ELIMINAR PRODUCTO BUSCADO/ENCONTRADO*********/
 
-        let memo=0
-        contenido_buscar.addEventListener("keyup",function(e){
-            //evitar que se pegue un texto(Ctrl+v)
-            if(e.keyCode==17){
-                contenido_buscar.value=""
-            }
-            if(e.keyCode==8){
-                if(memo>0){
-                memo -=1
-                }
-            }else{
-                memo ++
-            }
-            //alert(contenido_buscar.value+"--"+memo)
-
-            var html=""
-            listaProd((querySnapshot)=>{
-                querySnapshot.forEach((doc)=>{
-
-                    //alert(doc.data().nombre.slice(0,memo)+"=>"+contenido_buscar.value)
-                    if(doc.data().nombre.slice(0,memo)==contenido_buscar.value)  {
-                   
-                    html +=`
-                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2">
-                <div class="row d-flex justify-content-center  rounded-2">
-                        <span class=" border
-                        border-secondary border-top-0 
-                        border-start-0
-                        border-end-0
-                        border-bottom-1
-                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
-                        <span id="id_hidden">${doc.id}</span>
-                        <img src=${doc.data().imagenes["principal"]} class="py-1" style="width: 8rem;" data-img="${doc.id}" id="btnImage">
-                </div>
-                <div class="row rounded-2 p-0">
-                    <span class="btn-group">
-                        <p class="col-4 border btn btn-danger fw-bold"  id="btn-eliminar" data-eliminar="${doc.id}">🗑️</p>
-                        <p class="col-4 border btn btn-success fw-bold" id="btn-editar" data-editar="${doc.id}">✍️</p>
-                        <p class="col-4 border btn btn-primary fw-bold" id="btn-ver" data-ver="${doc.id}" >👁️‍🗨️</p>
-                    </span>
-                </div>
-            </div>
-            `           
-            
-            cont.innerHTML=html
-            //carrusel
-            //cerrar_carrusel
-
-             var sliderhtml=""
-            document.querySelectorAll("#btnImage").forEach((img)=>{
-                img.addEventListener("click", function(evt){
-                    document.getElementById("dialog-carrusel").showModal()
-                    sliderhtml=""
-                querySnapshot.forEach((doc)=>{
-                    if(doc.id==evt.target.dataset.img){
-                        doc.data().imagenes.otras.forEach(dat=>{
-                            sliderhtml +=`
-                        <div class="carousel-item">
-                            <img src="img/${dat}" class="d-block">
-                        </div>
-                    `
-                        })
-                        slider.innerHTML=sliderhtml
-                        document.querySelectorAll(".carousel-item")[0].classList.add("active")
-                    }
-                })
-                })
-            })
-            
-
-            document.querySelectorAll("#btn-ver").forEach(elementVer=>{
-              elementVer.addEventListener("click",({target:{dataset}})=>{
-
-                  document.getElementById("ver-categorias").innerHTML=""
-              document.getElementById("dialog-ver").showModal();
-
-              querySnapshot.forEach((doc)=>{
-              if(doc.id==dataset.ver){
-
-              document.getElementById("ver-id").textContent=doc.id
-              document.getElementById("ver-foto").src=doc.data().imagenes["principal"]
-              document.getElementById("ver-nombre").value=doc.data().nombre
-              document.getElementById("ver-marca").value=doc.data().marca
-              document.getElementById("ver-cantidad").value=doc.data().cantidad
-              document.getElementById("ver-detalles").textContent=doc.data().detalles
-              document.getElementById("ver-observaciones").textContent=doc.data().observacion
-
-              doc.data().categoria.forEach((badge)=>{
-                      document.getElementById("ver-categorias").innerHTML +=`
-                      <span id="badge" class="badge text-bg-${colores[Math.trunc(Math.random(0,6)*10)]}">${badge}</span>
-                  `
-                          })
-                      }
-                  })
-              })
-          })
-
-            document.querySelectorAll("#btn-eliminar").forEach((element)=>{
-          element.addEventListener("click",({target:{dataset}})=>{
-          document.getElementById("dialog-eliminar").showModal()
-          querySnapshot.forEach((doc)=>{
-              if(doc.id==dataset.eliminar){
-                  document.getElementById("eliminar-id").textContent=doc.id
-                  document.getElementById("eliminar-nombre").textContent=doc.data().nombre
-                      }
-                  })
-              })
-          })
-
-            document.querySelectorAll("#btn-editar").forEach(elementEdit=>{
-            elementEdit.addEventListener("click",({target:{dataset}})=>{
-            document.getElementById("dialog-editar").showModal();
-                
-              querySnapshot.forEach((doc)=>{
-              if(doc.id==dataset.editar){
-                  document.getElementById("editar-id").textContent=doc.id
-                  document.getElementById("editar-foto").src=doc.data().imagenes["principal"]
-                  document.getElementById("editar-nombre").value=doc.data().nombre
-                  document.getElementById("editar-marca").value=doc.data().marca
-                  document.getElementById("editar-cantidad").value=doc.data().cantidad
-                  document.getElementById("editar-detalles").value=doc.data().detalles
-                  document.getElementById("editar-observaciones").value=doc.data().observacion
-                   
-                  document.getElementById("editar-categorias").innerHTML=""
-                  doc.data().categoria.forEach((badge)=>{
-                      document.getElementById("editar-categorias").innerHTML +=`
-                      <span id="badge" class="badge text-bg-${colores[Math.trunc(Math.random(0,6)*10)]}">${badge}</span>
-                  `
-                        })
-                      }
-                  })
-              })
-          })
-
-            
-                   
-                    }
-                    
-
-                })
-            })
+        btnDel.addEventListener("click",(e)=>{
+            eliminarProd(document.getElementById("eliminar-id").textContent)
+            cerrar(e)
+            alert("Producto Eliminado!")
+            localStorage.setItem("producto","Producto fue eliminado")
+            document.body.innerHTML=`<p>${localStorage.getItem("producto")}</p><br>
+                                    <button class="btn btn-primary" id="comeBack" onclick="window.location.href('index.html')">REGRESAR</button>`
+            //windowindow.location.href("../")
         })
 
 
-    
+        /********EDITAR PRODUCTO BUSCADO/ENCONTRADO********************************************/
+        document.getElementById("selects").value=JSON.stringify(["sin categorias"])
+        
+        btnEditar.addEventListener("click", async function(evt){
+        var categorias=[]
+
+        evt.preventDefault()
+        document.querySelectorAll(".cat").forEach((cb_categorias)=>{
+            if(cb_categorias.checked){
+                categorias.push(cb_categorias.dataset.categoria)
+            }
+        })
+
+        if(categorias.length==0){
+            categorias=["sin categorias"]
+        }
+            try{
+                const docRef=doc(db,"prueba",document.getElementById("editar-id").textContent)
+                await updateDoc(docRef,{
+                    nombre:document.getElementById("editar-nombre").value,
+                    marca:document.getElementById("editar-marca").value,
+                    cantidad:document.getElementById("editar-cantidad").value,
+                    categoria:categorias,
+                    detalles:document.getElementById("editar-detalles").value,
+                    observacion:document.getElementById("editar-observaciones").value,
+                    fecha:new Date()
+                })
+                    alert("producto actualizado!")
+                    window.history.back()
+            }catch(error){
+                alert(error)
+            }
+        })
 
 
 
+        document.getElementById("comeBack").addEventListener("click", function(){
+            alert("ok")
+            //window.location.href="index.html"
+        })
 
-    </script>
-    
+
+
+</script>
+
 </body>
 </html>

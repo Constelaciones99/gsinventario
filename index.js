@@ -90,12 +90,15 @@ form_add.addEventListener("submit", async (event) => {
     
     // Feedback al usuario
     form_add.reset();
-    alert("✅ Producto guardado exitosamente");
+    document.getElementById("selects").value=JSON.stringify(["sin categorias"])
+    nombre_producto.disabled=true
+    alert("Producto guardado exitosamente");
+    window.location.reload()
     cerrarDialog('agregar');
     
   } catch (error) {
     console.error("Error en el proceso completo:", error);
-    alert(`❌ Error: ${error.message}`);
+    alert(`Error: ${error.message}`);
   } finally {
     showLoading(false);
   }

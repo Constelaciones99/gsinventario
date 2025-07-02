@@ -1,7 +1,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import { getStorage} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
-import { getFirestore,  collection, addDoc, getDocs, onSnapshot,deleteDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
+import { getFirestore,  
+          collection, 
+          addDoc, 
+          getDocs, 
+          onSnapshot,
+          deleteDoc, 
+          doc, 
+          getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -31,7 +38,7 @@ export function guardarProducto(nombre, cantidad, marca, categoria, detalles, ob
    if(categoria=="" || categoria==[] || categoria==['']){
       categoria=["sin categoria"]
    }
-   alert(categoria)
+   alert("categoria: "+categoria)
   addDoc(collection(db, "prueba"), {
     nombre, cantidad, marca,categoria, detalles, observacion, imagenes, fecha
   });
@@ -53,5 +60,17 @@ export function guardarProducto(nombre, cantidad, marca, categoria, detalles, ob
   export const elemento=async function(id){
         const docRef = doc(db, "prueba", id);
         const docSnap = await getDoc(docRef);
-        return(docSnap.data().nombre)
+        //return(docSnap.data().nombre)
+  }
+
+  export const actProd=async function(id,newProd){
+    
+    try {
+      const docRef=doc(db,"prueba",id)
+      await updateDoc(docRef,newProd)
+      alert("siuuu")
+      
+        } catch (error) {
+          alert(error)
+        }
   }

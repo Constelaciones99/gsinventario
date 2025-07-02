@@ -130,35 +130,37 @@
       <!-- Sección Izquierda -->
       <div class="section d-flex flex-column align-items-center justify-content-center">
         <div class="img-group">
-          <img src="img/buscare.png" style="animation: dancing 1.5s ease-out infinite;" class="img-btn" onclick="abrirDialog('buscar')" data-img="buscar">
-          <img src="img/agregar-producto.png" style="animation: dancing  1.5s .2s ease-out infinite;" data-img="Agregar" class="img-btn" onclick="abrirDialog('agregar')">
+          <img src="img/buscare.png" style="animation: dancing 1.5s ease-out infinite;" class="img-btn"  data-img="buscar">
+          <img src="img/agregar-producto.png" style="animation: dancing  1.5s .2s ease-out infinite;" data-img="agregar" class="img-btn" >
         </div>
       </div>
 
       <!-- Sección Central -->
       <div class="section d-flex flex-column align-items-center justify-content-center text-center">
-        <img src="img/inventario.png" style="animation: dancing 1.5s .8s ease-out infinite;" class="img-btn mb-2 bg-transparent border-0" alt="Inventario">
-        <a href="prev.html" class="fw-bold fs-6 text-dark bg-warning px-2 py-1 rounded" id="verTodo">VER INVENTARIO</a>
+        <img src="img/inventario.png" style="animation: dancing 1.5s .8s ease-out infinite;" class="img-btn mb-2 bg-transparent border-0" data-img="ver Todo">
+        <a href="inventario.html" class="fw-bold fs-6 text-dark bg-warning px-2 py-1 rounded" id="verTodo">VER INVENTARIO</a>
         <p class="mt-1" id="descripcion">...</p>
       </div>
 
       <!-- Sección Derecha -->
       <div class="section d-flex flex-column align-items-center justify-content-center">
         <div class="img-group">
-          <img src="img/devolucion-de-producto.png" style="animation: dancing 1.5s .4s ease-out infinite;" data-img="Editar" class="img-btn" onclick="abrirDialog('editar')">
-          <img src="img/eliminar-producto.png" style="animation: dancing 1.5s .6s ease-out infinite;" data-img="Eliminar" class="img-btn" onclick="abrirDialog('eliminar')">
+          <img src="img/devolucion-de-producto.png" style="animation: dancing 1.5s .4s ease-out infinite;" data-img="editar" class="img-btn" onclick="abrirDialog('editar')">
+          <img src="img/eliminar-producto.png" style="animation: dancing 1.5s .6s ease-out infinite;" data-img="eliminar" class="img-btn" onclick="abrirDialog('eliminar')">
         </div>
       </div>
     </div>
 
     <!-- DIALOGOS -->
     <dialog id="dialog-buscar">
-      <p class="fs-4 fw-bold">🔍 BUSCAR PRODUCTO</p>
-      <input type="text" class="form-control mb-2" placeholder="ID o nombre del producto">
+
+        <p class="fs-4 fw-bold">🔍 BUSCAR PRODUCTO</p>
+      <input type="text" class="form-control mb-2" id="text_prod"  placeholder="ID o nombre del producto">
       <div class="text-end">
-        <button class="btn btn-secondary" onclick="cerrarDialog('buscar')">Cancelar</button>
-        <button class="btn btn-warning text-dark">Buscar</button>
+        <button class="btn btn-secondary" data-cerrar="buscar" id="cerrarDialog">Cancelar</button>
+        <button class="btn btn-warning text-dark" id="btnQuerySearch">Buscar</button>
       </div>
+
     </dialog>
 
     <dialog id="dialog-agregar" class="w-75">
@@ -169,7 +171,7 @@
 
                     
                     <label>Seleccionar producto:</label>
-                    <select class="form-select mb-2" onchange="verificar()" id="menu-prod" name="select_prod">
+                    <select class="form-select mb-2"  id="select_producto-prod" name="select_prod">
                     <option value="">--Seleccionar--</option>
                     <option>mouse</option>
                     <option>teclado</option>
@@ -183,12 +185,12 @@
                     <option>Repetidor</option>
                     </select>
                     
-                    <input type="text" class="form-control mb-2" required placeholder="| Producto" id="item-producto" name="name_prod">
+                    <input type="text" class="form-control mb-2" placeholder="| Producto" id="item-producto" name="name_prod">
                     <hr>
                     <input type="number" class="form-control mb-2" required placeholder="| Cantidad" min="0" name="cantidad">
-                    <input type="text" class="form-control mb-2" placeholder="| Marca" name="marca">
+                    <input type="text" class="form-control mb-2" required placeholder="| Marca" name="marca">
                     <hr>
-                    <input type="text" id="selects" name="categoriastodas" >
+                    <input type="text" id="selects" name="categoriastodas" hidden>
                     <ul id="lista">
                     <li><input type="checkbox" class="cat" data-categoria="periferico de entrada">periferico de entrada</li>
                     <li><input type="checkbox" class="cat" data-categoria="periferico de salida">periferico de salida</li>
@@ -207,40 +209,48 @@
                     <textarea class="form-control mb-2" placeholder="-Tiene el cable pelado" name="observaciones"></textarea>
                     <div class="d-flex justify-content-end mb-2">
                       <hr>
-                    <!-- <button class="btn btn-success"></button> -->
+                    <!-- <button class="btn btn-success"></button> name_prod-->
                      <input type="file" value="AGREGAR FOTO 📷" class="btn btn-success" name="foto">
                     <hr>
                     </div>
                     <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-secondary me-2" onclick="cerrarDialog('agregar')">⬅️CANCELAR</button>
+                    <button type="button" class="btn btn-secondary me-2" data-cerrar="agregar" id="cerrarDialog">⬅️CANCELAR</button>
                     <!-- <button type="submit" class="btn btn-warning text-dark">💾GUARDAR</button> -->
-                     <input type="submit" class="btn btn-warning text-dark" value="💾GUARDAR">
+                     <input type="submit" class="btn btn-warning text-dark" id="guardarProd" value="💾GUARDAR">
                     </div>
         </form>
     </dialog>
 
     <dialog id="dialog-editar" >
       <p class="fs-4 fw-bold">✏️ EDITAR PRODUCTO</p>
-      <select class="form-select mb-2">
-        <option>Producto 1</option>
-        <option>Producto 2</option>
+      <input type="text" class="w-100 mb-2 fs-5 ps-2"  id="id_prod_edit" disabled value="ID">
+      <select class="form-select mb-2" id="ListProd">
+        <option>sin conexion</option>
       </select>
-      <input type="text" class="form-control mb-2" placeholder="Nuevo nombre">
+      <select class="form-select mb-2" id="ListProp" disabled>
+        <option>nombre</option>
+        <option>marca</option>
+        <option>cantidad</option>
+        <option>detalles</option>
+        <option>observacion</option>
+
+      </select>
+      <input type="text" class="form-control mb-2" id="newValue" placeholder="Nuevo valor">
       <div class="text-end">
-        <button class="btn btn-secondary" onclick="cerrarDialog('editar')">Cancelar</button>
-        <button class="btn btn-primary">Actualizar</button>
+        <button class="btn btn-secondary" id="cerrarDialog" data-cerrar="editar">Cancelar</button>
+        <button class="btn btn-primary" id="btnUpdate">Actualizar</button>
       </div>
     </dialog>
 
     <dialog id="dialog-eliminar">
       <p class="fs-4 fw-bold text-danger">🗑️ ELIMINAR PRODUCTO</p>
-      <select class="form-select mb-2">
+      <select class="form-select mb-2" id="prodEliminar">
         <option>Producto 1</option>
         <option>Producto 2</option>
       </select>
       <div class="text-end">
-        <button class="btn btn-secondary" onclick="cerrarDialog('eliminar')">Cancelar</button>
-        <button class="btn btn-danger">Eliminar</button>
+        <button class="btn btn-secondary" id="cerrarDialog" data-cerrar="eliminar">Cancelar</button>
+        <button class="btn btn-danger" id="deleteProd">Eliminar</button>
       </div>
     </dialog>
 
@@ -248,62 +258,171 @@
 
   <script type="module" src="index.js"></script>
 
-  <script>
-    var description=document.getElementById("descripcion")
-    var menu=document.getElementById("menu-prod")
-    var nombre_producto=document.getElementById("item-producto")
-    var cats=document.getElementsByClassName("cat")
-    var items=document.getElementById("selects")
+  <script type="module">
+      import {obtenerProd, listaProd, eliminarProd, elemento, db} from './firebase.js'
+      import {doc, updateDoc, getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
 
-    items.value=JSON.stringify(["sin categorias"])
+      var cb_productos_edit=document.getElementById("ListProd")
+      var cb_propiedades_edit=document.getElementById("ListProp")
+      var cb_productos_eliminar=document.getElementById("prodEliminar")
+      var btnDelProd=document.getElementById("deleteProd")
+      var nombre_producto=document.getElementById("item-producto")
+      var select_producto=document.getElementById("select_producto-prod")
+      var items=document.getElementById("selects")
+      var title_prod=document.getElementById("id_prod_edit")
+      var newValueProd=document.getElementById("newValue")
+      var description=document.getElementById("descripcion")
+      var keyNameProd=document.getElementById("text_prod")
+      var btnSearchProd=document.getElementById("btnQuerySearch")
 
-    categorias=[]
+      var prodLocal={
+            id:"",
+            nombre:"",
+            marca:"",
+            cantidad:"",
+            categoria:"",
+            imagenes:"",
+            observacion:"",
+            fecha:""
+      }
 
-        for(i=0;i<cats.length;i++){
-              cats[i].onclick=function(item){
-
-                if(items.value==JSON.stringify(["sin categorias"])){
-                  categorias=[]
-                }
-
-                  if(item.target.checked){
-                    categorias.push(item.target.dataset.categoria)
-                  items.value=JSON.stringify(categorias)
-                  }else{
-                    num=categorias.indexOf(item.target.dataset.categoria)
-                    categorias.splice(num,1)
-                    if(items.value=='[]'){
-                        categorias=["sin categorias"]
-                        items.value=["sin categorias"]
-                      }
-                    items.value=JSON.stringify(categorias)
-                  }
-
+      btnSearchProd.addEventListener("click", function(){
+          listaProd((querySnapshot)=>{
+            querySnapshot.forEach(doc =>{
+                  if(doc.data().nombre.trim().toLowerCase()==keyNameProd.value.trim().toLowerCase()){
+                  prodLocal={
+                    id:doc.id,
+                    nombre:doc.data().nombre,
+                    marca:doc.data().marca,
+                    cantidad:doc.data().cantidad,
+                    categoria:doc.data().categoria,
+                    imagenes:doc.data().imagenes,
+                    detalles:doc.data().detalles,
+                    observacion:doc.data().observacion,
+                    fecha:doc.data().fecha
               }
-        }
+              localStorage.setItem("producto",JSON.stringify(prodLocal))
+              window.location.href="resultado.html"
+                }
+            })
+            if(prodLocal.nombre==""){
+              alert("Producto no econtrado: "+keyNameProd.value)
+            }
+          })
+
+      })
+
+      document.getElementById("guardarProd").addEventListener("click",function(){
+              items.value=JSON.stringify(["sin categorias"])
+            var categorias=[]
+            document.querySelectorAll(".cat").forEach((cb)=>{
+                      if(cb.checked){
+                        categorias.push(cb.dataset.categoria)
+                      }
+                    })
+                    if(categorias.length==0){
+                      items.value=JSON.stringify(["sin categorias"])
+                    }else{
+                      items.value=JSON.stringify(categorias)
+                    }
+      })
+
+      
+
+      window.addEventListener("DOMContentLoaded", function(){
+        listaProd((querySnapshot)=>{
+          cb_productos_edit.innerHTML="<option selected disabled>--Selecciona Producto--</option>"
+          cb_productos_eliminar.innerHTML=""
+            querySnapshot.forEach(doc =>{
+                cb_productos_edit.innerHTML +=`
+                  <option data-identy=${doc.id}>${doc.data().nombre}</option>
+                `
+                cb_productos_eliminar.innerHTML +=`
+                <option data-delete=${doc.id}>${doc.data().nombre}</option>
+                `
+            });
+      })
+
+      })
+
+      cb_productos_edit.addEventListener("change",function(){
+              title_prod.value=cb_productos_edit.selectedOptions[0].dataset.identy
+              cb_propiedades_edit.disabled=false
+      })
 
 
-    document.body.addEventListener("mouseover",opc=>{
-            if(!opc.target.dataset.img)return
-            description.textContent=opc.target.dataset.img
+      /*PARA ABRIR UN MODAL*/
+      document.querySelectorAll(".img-btn").forEach((elemento)=>{
+            elemento.addEventListener("click",function(evt){
+                document.getElementById(`dialog-${evt.target.dataset.img}`).showModal();
+            })
+      })
+      /*PARA CERRAR UN MODAL*/
+      document.querySelectorAll("#cerrarDialog").forEach((elementor)=>{
+            elementor.addEventListener("click",function(evt){
+                document.getElementById(`dialog-${evt.target.dataset.cerrar}`).close();
+            })
+      })
+
+      select_producto.addEventListener("change",function(){
+                    if(select_producto.selectedIndex>0){
+                        nombre_producto.value=""
+                        nombre_producto.disabled=true
+                    }else{
+                        nombre_producto.disabled=false
+                    }
         })
 
-    const abrirDialog=tipo=>{
-      document.getElementById(`dialog-${tipo}`).showModal();
-    }
+      var btnDelProd=document.getElementById("deleteProd").addEventListener("click", function(){
+              listaProd((querySnapshot)=>{
+                //limpiar campos
+                  querySnapshot.forEach(doc =>{
+                    if(doc.data().nombre==cb_productos_eliminar.value){
+                      var conquest= confirm("Seguro que deseas eliminar este Producto?")
+                      if(conquest){
+                        eliminarProd(doc.id)
+                        alert("Producto eliminado!")
+                              }
+                            }
+                          })
+                        })
+                      })
 
-    const cerrarDialog=tipo=>{
-      document.getElementById(`dialog-${tipo}`).close();
-    }
+      document.getElementById("btnUpdate").onclick=async ()=>{
+              var props=[
+                {nombre:"Alina"},
+                {marca:"xd"},
+                {cantidad:1},
+                {detalles:"Sin detalles"},
+                {observacion:"Sin observaciones"}
+                  ]
 
-    const verificar=function(){
-            if(menu.selectedIndex>0){
-                nombre_producto.value=""
-                nombre_producto.disabled=true
-            }else{
-                nombre_producto.disabled=false
-            }
-        }
+              props[cb_propiedades_edit.selectedIndex][cb_propiedades_edit.value]=newValueProd.value
+
+              try{
+                const docRef=doc(db,"prueba",title_prod.value)
+                await updateDoc(docRef,props[cb_propiedades_edit.selectedIndex])
+                title_prod.value="ID"
+                newValueProd.value=""
+              cb_propiedades_edit.disabled=true
+                alert("Producto Editado!")
+              }catch(error){
+                  alert(error)
+              }
+                      
+      }
+
+
+      /* Mostrar la operacion en un span cuando se pasa el mouse */
+        
+       document.body.addEventListener("mouseover",opc=>{
+                if(!opc.target.dataset.img)return
+                description.textContent=opc.target.dataset.img
+            })
+
+        
+    
+
   </script>
 </body>
 </html>
