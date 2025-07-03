@@ -7,8 +7,8 @@ import { getFirestore,
           getDocs, 
           onSnapshot,
           deleteDoc, 
-          doc, 
-          getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
+          doc
+        } from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -31,6 +31,7 @@ import { getFirestore,
 
 export function guardarProducto(nombre, cantidad, marca, categoria, detalles, observacion, imagen, fecha){
    categoria=JSON.parse(categoria)
+
    var imagenes={'otras':['raton.png','raton(1).png','raton(2).png'], 
             'principal':imagen
             }
@@ -38,7 +39,17 @@ export function guardarProducto(nombre, cantidad, marca, categoria, detalles, ob
    if(categoria=="" || categoria==[] || categoria==['']){
       categoria=["sin categoria"]
    }
-   alert("categoria: "+categoria)
+   if(detalles==""){
+    detalles="sin detalles"
+   }
+   if(observacion==""){
+    observacion="sin observaciones"
+   }
+   if(marca==""){
+    marca="sin marca"
+   }
+
+   alert("nombre: "+nombre+" - cantidad: "+cantidad+" - categoria: "+categoria+" - detalles: "+detalles+" - observacion: "+observacion+" - marca: "+marca+" - imagenes: "+imagenes)
   addDoc(collection(db, "prueba"), {
     nombre, cantidad, marca,categoria, detalles, observacion, imagenes, fecha
   });
@@ -55,22 +66,4 @@ export function guardarProducto(nombre, cantidad, marca, categoria, detalles, ob
 
   export function eliminarProd(id){
       deleteDoc(doc(db,"prueba",id))
-  }
-
-  export const elemento=async function(id){
-        const docRef = doc(db, "prueba", id);
-        const docSnap = await getDoc(docRef);
-        //return(docSnap.data().nombre)
-  }
-
-  export const actProd=async function(id,newProd){
-    
-    try {
-      const docRef=doc(db,"prueba",id)
-      await updateDoc(docRef,newProd)
-      alert("siuuu")
-      
-        } catch (error) {
-          alert(error)
-        }
   }

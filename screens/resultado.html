@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="e">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,11 @@
     <style>
               @font-face {
             font-family: printer;
-            src: url(fuentes/printer.ttf);
+            src: url(./../src/styles/fuentes/printer.ttf);
         }
         @font-face {
             font-family: Monaco;
-            src: url(fuentes/Monaco.ttf);
+            src: url(./../src/styles/fuentes/Monaco.ttf);
         }
         html{
             ::-webkit-scrollbar{
@@ -42,7 +42,7 @@
             border:none;
             border-radius: 10px;
             box-shadow: 0px 0px 5px 1px #242424;
-            z-index: 1000; /* Opcional, por si se esconde detrás de otros elementos */
+            z-index: 1000; /* Opcional, por si se esconde detrás de otros */
         }
         #dialog-editar form input{
             font-size: 16px;
@@ -148,9 +148,9 @@
                 <hr>
                 <h3 id="editar-id">PROD-0004</h3>
                 <hr>
-                <img src="img/agotado.png" id="editar-foto" style="width: 5rem;"><br>
+                <img src="./../src/styles/img/agotado.png" id="editar-foto" style="width: 5rem;"><br>
 
-                <input type="file"  title="sdad" name="sd" id="changePhoto" value="cambiar foto"><br>
+                <input type="file" name="sd" id="changePhoto" value="cambiar foto"><br>
                 
                 <input type="text" class="mb-1 fs-5 " id="editar-nombre" placeholder="Nombre"><br>
                 <input type="text" class="mb-1 fs-5 " id="editar-marca"  placeholder="Marca"><br>
@@ -183,7 +183,7 @@
             <form action="#" id="form-ver" class="text-center">
                <h3 id="ver-id">PROD-0003</h3>
                <hr>
-               <img src="img/agotado.png" id="ver-foto" style="width: 5rem;">
+               <img src="./../img/agotado.png" id="ver-foto" style="width: 5rem;">
                <hr>
                 <input id="ver-nombre" class="fs-4 fw-bold text-center border-0" value="" disabled> <br>
                 <input id="ver-marca" class="fs-5 text-center border-0" value="" disabled> <br>
@@ -218,8 +218,9 @@
     
 <script type="module">
 
-    import {obtenerProd, listaProd, eliminarProd, elemento, db} from './firebase.js'
+    import {obtenerProd, listaProd, eliminarProd, db, storage} from './../config/firebase.js'
     import {doc, updateDoc, getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
+    import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
 
 
@@ -272,7 +273,7 @@
                         miProducto.imagenes.otras.forEach(dat=>{
                             sliderhtml +=`
                         <div class="carousel-item">
-                            <img src="img/${dat}" class="d-block">
+                            <img src='./../src/styles/img/${dat}' class="d-block">
                         </div>
                     `
                         })
@@ -386,12 +387,60 @@
             alert("Producto Eliminado!")
             localStorage.setItem("producto","Producto fue eliminado")
             document.body.innerHTML=`<p>${localStorage.getItem("producto")}</p><br>
-                                    <button class="btn btn-primary" id="comeBack" onclick="window.location.href('index.html')">REGRESAR</button>`
+                                    <button class="btn btn-primary" id="comeBack" onclick="window.location.href('./../index.html')">REGRESAR</button>`
             //windowindow.location.href("../")
         })
 
 
         /********EDITAR PRODUCTO BUSCADO/ENCONTRADO********************************************/
+
+
+        //////////////CAMBIANDO DE FOTO PRINCIPAL//////////////////////////////////////////
+        
+        let imagenUrl = "";
+
+        document.getElementById("changePhoto").addEventListener("change",async function(evt){
+            var file=evt.target.files[0]
+            if (file) {
+            try {
+                imagenUrl = await uploadFileToStorage(file);
+            } catch (uploadError) {
+                console.error("Error subiendo imagen:", uploadError);
+                throw new Error(`Error al subir la imagen: ${uploadError.message}`);
+            }
+            }
+        })
+
+
+        /*********************************************/
+        /*FUNCION DE GUARDA IMAGENES*****************/
+         // Función mejorada para subir imágenes
+        async function uploadFileToStorage(file) {
+        try {
+            // Validación del archivo
+            if (!file) return null;
+            
+            if (!file.type.match('image.*')) {
+            throw new Error('Solo se permiten archivos de imagen');
+            }
+            
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+            throw new Error('La imagen es demasiado grande (máximo 5MB)');
+            }
+
+            // Subir el archivo
+            const storageRef = ref(storage, `productos/${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            
+            // Obtener URL pública
+            return await getDownloadURL(snapshot.ref);
+        } catch (error) {
+            console.error('Error en uploadFileToStorage:', error);
+            throw error;
+        }
+        }
+
         document.getElementById("selects").value=JSON.stringify(["sin categorias"])
         
         btnEditar.addEventListener("click", async function(evt){
@@ -407,6 +456,8 @@
         if(categorias.length==0){
             categorias=["sin categorias"]
         }
+
+        if(imagenUrl==undefined || imagenUrl==null || imagenUrl==""){
             try{
                 const docRef=doc(db,"prueba",document.getElementById("editar-id").textContent)
                 await updateDoc(docRef,{
@@ -423,6 +474,27 @@
             }catch(error){
                 alert(error)
             }
+        }else{
+            try{
+                const docRef=doc(db,"prueba",document.getElementById("editar-id").textContent)
+                await updateDoc(docRef,{
+                    nombre:document.getElementById("editar-nombre").value,
+                    marca:document.getElementById("editar-marca").value,
+                    cantidad:document.getElementById("editar-cantidad").value,
+                    categoria:categorias,
+                    detalles:document.getElementById("editar-detalles").value,
+                    imagenes:{"principal":imagenUrl, "otras":["raton.png","raton(1).png"]},
+                    observacion:document.getElementById("editar-observaciones").value,
+                    fecha:new Date()
+                })
+                    alert("producto actualizado!")
+                    window.history.back()
+            }catch(error){
+                alert(error)
+            }
+        }
+
+            
         })
 
 

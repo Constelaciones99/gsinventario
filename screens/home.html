@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="file" value="xd" id="inptFile" accept="image/*">
+  <img id="contenido" style="width: 200px; height: 200px;">
+
+  </p>
+  <script>
+
+      document.getElementById("inptFile").addEventListener("change", evt=>{
+        var file=evt.target.files[0]
+        if(file){
+          var reader=new FileReader()
+          reader.onload=item=>{
+              //alert(item.target.result)
+              document.getElementById("contenido").src=item.target.result
+          }
+           reader.readAsDataURL(file)
+        }
+      })
+
+</script>
+</body>
+</html>

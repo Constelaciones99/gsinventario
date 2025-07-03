@@ -7,19 +7,19 @@
   <style>
     @font-face {
       font-family: avigea;
-      src: url(fuentes/Avigea.ttf);
+      src: url(./src/styles/fuentes/Avigea.ttf);
     }
     @font-face {
       font-family: basilik;
-      src: url(fuentes/basilik.ttf);
+      src: url(./src/styles/fuentes/basilik.ttf);
     }
     @font-face {
       font-family: bohemian;
-      src: url(fuentes/bohemian.otf);
+      src: url(./src/styles/fuentes/bohemian.otf);
     }
     @font-face {
       font-family: carena;
-      src: url(fuentes/carena.otf);
+      src: url(./src/styles/fuentes/carena.otf);
     }
     body, html {
       margin: 0;
@@ -130,23 +130,23 @@
       <!-- Sección Izquierda -->
       <div class="section d-flex flex-column align-items-center justify-content-center">
         <div class="img-group">
-          <img src="img/buscare.png" style="animation: dancing 1.5s ease-out infinite;" class="img-btn"  data-img="buscar">
-          <img src="img/agregar-producto.png" style="animation: dancing  1.5s .2s ease-out infinite;" data-img="agregar" class="img-btn" >
+          <img src="./src/styles/img/buscare.png" style="animation: dancing 1.5s ease-out infinite;" class="img-btn"  data-img="buscar">
+          <img src="./src/styles/img/agregar-producto.png" style="animation: dancing  1.5s .2s ease-out infinite;" data-img="agregar" class="img-btn" >
         </div>
       </div>
 
       <!-- Sección Central -->
       <div class="section d-flex flex-column align-items-center justify-content-center text-center">
-        <img src="img/inventario.png" style="animation: dancing 1.5s .8s ease-out infinite;" class="img-btn mb-2 bg-transparent border-0" data-img="ver Todo">
-        <a href="inventario.html" class="fw-bold fs-6 text-dark bg-warning px-2 py-1 rounded" id="verTodo">VER INVENTARIO</a>
+        <img src="./src/styles/img/inventario.png" style="animation: dancing 1.5s .8s ease-out infinite;" class="img-btn mb-2 bg-transparent border-0" data-img="ver Todo">
+        <a href="./screens/inventario.html" class="fw-bold fs-6 text-dark bg-warning px-2 py-1 rounded" id="verTodo">VER INVENTARIO</a>
         <p class="mt-1" id="descripcion">...</p>
       </div>
 
       <!-- Sección Derecha -->
       <div class="section d-flex flex-column align-items-center justify-content-center">
         <div class="img-group">
-          <img src="img/devolucion-de-producto.png" style="animation: dancing 1.5s .4s ease-out infinite;" data-img="editar" class="img-btn" onclick="abrirDialog('editar')">
-          <img src="img/eliminar-producto.png" style="animation: dancing 1.5s .6s ease-out infinite;" data-img="eliminar" class="img-btn" onclick="abrirDialog('eliminar')">
+          <img src="./src/styles/img/devolucion-de-producto.png" style="animation: dancing 1.5s .4s ease-out infinite;" data-img="editar" class="img-btn" onclick="abrirDialog('editar')">
+          <img src="./src/styles/img/eliminar-producto.png" style="animation: dancing 1.5s .6s ease-out infinite;" data-img="eliminar" class="img-btn" onclick="abrirDialog('eliminar')">
         </div>
       </div>
     </div>
@@ -181,14 +181,14 @@
                     <option>cable HDMI</option>
                     <option>FUENTE</option>
                     <option>memoria RAM</option>
-                    <option>PC</option>
+                    <option>equipo</option>
                     <option>Repetidor</option>
                     </select>
                     
                     <input type="text" class="form-control mb-2" placeholder="| Producto" id="item-producto" name="name_prod">
                     <hr>
                     <input type="number" class="form-control mb-2" required placeholder="| Cantidad" min="0" name="cantidad">
-                    <input type="text" class="form-control mb-2" required placeholder="| Marca" name="marca">
+                    <input type="text" class="form-control mb-2" placeholder="| Marca" name="marca" id="marca_producto">
                     <hr>
                     <input type="text" id="selects" name="categoriastodas" hidden>
                     <ul id="lista">
@@ -204,13 +204,13 @@
 
                     <hr>
                     <label>Detalles:</label>
-                    <textarea class="form-control mb-2" placeholder="-Asignado a usuario..." name="detalles"></textarea>
+                    <textarea class="form-control mb-2" placeholder="-Asignado a usuario..." name="detalles" id="text-detalles"></textarea>
                     <label>Observaciones:</label>
-                    <textarea class="form-control mb-2" placeholder="-Tiene el cable pelado" name="observaciones"></textarea>
+                    <textarea class="form-control mb-2" placeholder="-Tiene el cable pelado" name="observaciones" id="text-observaciones"></textarea>
                     <div class="d-flex justify-content-end mb-2">
                       <hr>
                     <!-- <button class="btn btn-success"></button> name_prod-->
-                     <input type="file" value="AGREGAR FOTO 📷" class="btn btn-success" name="foto">
+                     <input type="file" value="AGREGAR FOTO 📷" class="btn btn-success" id="inptFile" name="foto">
                     <hr>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -256,10 +256,10 @@
 
   </div>
 
-  <script type="module" src="index.js"></script>
+  <script type="module" src="./config/index.js"></script>
 
   <script type="module">
-      import {obtenerProd, listaProd, eliminarProd, elemento, db} from './firebase.js'
+      import {obtenerProd, listaProd, eliminarProd, db} from './config/firebase.js'
       import {doc, updateDoc, getDoc} from 'https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js'
 
       var cb_productos_edit=document.getElementById("ListProd")
@@ -274,7 +274,10 @@
       var description=document.getElementById("descripcion")
       var keyNameProd=document.getElementById("text_prod")
       var btnSearchProd=document.getElementById("btnQuerySearch")
-
+      var marcaProducto=document.getElementById("marca_producto")
+      var txt_detalles=document.getElementById("text-detalles")
+      var txt_observa=document.getElementById("text-observaciones")
+    //alert
       var prodLocal={
             id:"",
             nombre:"",
@@ -302,7 +305,7 @@
                     fecha:doc.data().fecha
               }
               localStorage.setItem("producto",JSON.stringify(prodLocal))
-              window.location.href="resultado.html"
+              window.location.href="./screens/resultado.html"
                 }
             })
             if(prodLocal.nombre==""){
@@ -325,6 +328,21 @@
                     }else{
                       items.value=JSON.stringify(categorias)
                     }
+            /**/
+            if(marcaProducto.value==""){
+              marcaProducto.value="Sin marca"
+            }
+            if(txt_detalles.value==""){
+              txt_detalles.value="sin detalles"
+            }
+            if(txt_observa.value==""){
+              txt_observa.value="sin observaciones"
+            }
+
+            if(!document.getElementById("inptFile").files[0]){
+              alert("no se encontró imagenes")
+              document.getElementById("inptFile").files[0]="https://firebasestorage.googleapis.com/v0/b/inventary-74f46.firebasestorage.app/o/productos%2Fimagen.png?alt=media&token=431dfccd-538f-4e03-a6af-80316eb97ad4"
+            }
       })
 
       
@@ -332,7 +350,7 @@
       window.addEventListener("DOMContentLoaded", function(){
         listaProd((querySnapshot)=>{
           cb_productos_edit.innerHTML="<option selected disabled>--Selecciona Producto--</option>"
-          cb_productos_eliminar.innerHTML=""
+          cb_productos_eliminar.innerHTML="<option selected disabled>--Selecciona Producto--</option>"
             querySnapshot.forEach(doc =>{
                 cb_productos_edit.innerHTML +=`
                   <option data-identy=${doc.id}>${doc.data().nombre}</option>
@@ -407,7 +425,7 @@
               cb_propiedades_edit.disabled=true
                 alert("Producto Editado!")
               }catch(error){
-                  alert(error)
+                 // alert(error)throw nombre_producto
               }
                       
       }
@@ -437,7 +455,7 @@
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
-      allow read, write: if false;
+      allow read, write: if request.auth != null;
     }
   }
 } -->

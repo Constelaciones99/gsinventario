@@ -9,11 +9,11 @@
     <style>
         @font-face {
             font-family: printer;
-            src: url(fuentes/printer.ttf);
+            src: url(./../src/styles/fuentes/printer.ttf);
         }
         @font-face {
             font-family: Monaco;
-            src: url(fuentes/Monaco.ttf);
+            src: url(./../src/styles/fuentes/Monaco.ttf);
         }
         html{
             ::-webkit-scrollbar{
@@ -151,7 +151,7 @@
                 <hr>
                 <h3 id="editar-id">PROD-0004</h3>
                 <hr>
-                <img src="img/agotado.png" id="editar-foto" style="width: 5rem;"><br>
+                <img src="./../src/styles/img/agotado.png" id="editar-foto" style="width: 5rem;"><br>
                 <input type="text" class="mb-1 fs-5 " id="editar-nombre" placeholder="Nombre"><br>
                 <input type="text" class="mb-1 fs-5 " id="editar-marca"  placeholder="Marca"><br>
                 <input type="number" class="mb-1 fs-5 " id="editar-cantidad"  placeholder="Cantidad"><hr>
@@ -171,7 +171,7 @@
             <form action="#" id="form-ver" class="text-center">
                <h3 id="ver-id">PROD-0003</h3>
                <hr>
-               <img src="img/agotado.png" id="ver-foto" style="width: 5rem;">
+               <img src="./../src/styles/img/agotado.png" id="ver-foto" style="width: 5rem;">
                <hr>
                 <input id="ver-nombre" class="fs-4 fw-bold text-center border-0" value="" disabled> <br>
                 <input id="ver-marca" class="fs-5 text-center border-0" value="" disabled> <br>
@@ -192,13 +192,13 @@
         <div id="carouselExampleIndicators" class="carousel slide">
         <div id="carousel-inner">
             <div class="carousel-item active">
-                <img src="img/raton.png" class="d-block w-100">
+                <img src="./../src/styles/img/raton.png" class="d-block w-100">
             </div>
             <div class="carousel-item">
-                <img src="img/raton(1).png" class="d-block w-100">
+                <img src="./../src/styles/img/raton(1).png" class="d-block w-100">
             </div>
             <div class="carousel-item">
-                <img src="img/raton(2).png" class="d-block w-100">
+                <img src="./../src/styles/img/raton(2).png" class="d-block w-100">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -212,7 +212,7 @@
         </div>
     </dialog>
 
-    <script src="inventario.js"></script>
+    <script src="./../config/inventario.js"></script>
     <script>
 
         contenido=document.getElementById("contenidoCargado")
