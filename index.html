@@ -95,6 +95,7 @@
     #titulo_pagina{
       font-family: carena;
       font-size: 3.4rem;
+      color: #6b9ac4;
     }
 
     @keyframes dancing{
@@ -110,8 +111,6 @@
       background: linear-gradient(90deg, #fff, cornsilk, #fff);
     }
 
-    
-
   </style>
 </head>
 <body>
@@ -123,7 +122,6 @@
         <h5 class="m-0 text-warning" id="titulo_pagina">Materiales</h5>
       </div>
     </header>
-
     <!-- Cuerpo principal -->
     <div class="flex-grow-1 d-flex layout" id="seccion">
 
@@ -152,6 +150,8 @@
     </div>
 
     <!-- DIALOGOS -->
+
+    <!-- BUSCAR -->
     <dialog id="dialog-buscar">
 
         <p class="fs-4 fw-bold">🔍 BUSCAR PRODUCTO</p>
@@ -163,13 +163,12 @@
 
     </dialog>
 
+  <!-- AGREGAR -->
     <dialog id="dialog-agregar" class="w-75">
       <form class="" enctype="multipart/form-data" id="form-agregar">
                     <h5 class="fw-bold text-center">AGREGAR PRODUCTO</h5>
                     <hr>
                        <input type='text' name='id_prod' class='form-control mb-2 fw-bold' value="PROD-001" disabled>
-
-                    
                     <label>Seleccionar producto:</label>
                     <select class="form-select mb-2"  id="select_producto-prod" name="select_prod">
                     <option value="">--Seleccionar--</option>
@@ -221,6 +220,8 @@
         </form>
     </dialog>
 
+    <!-- EDITAR -->
+
     <dialog id="dialog-editar" >
       <p class="fs-4 fw-bold">✏️ EDITAR PRODUCTO</p>
       <input type="text" class="w-100 mb-2 fs-5 ps-2"  id="id_prod_edit" disabled value="ID">
@@ -241,6 +242,8 @@
         <button class="btn btn-primary" id="btnUpdate">Actualizar</button>
       </div>
     </dialog>
+
+    <!-- ELIMINAR -->
 
     <dialog id="dialog-eliminar">
       <p class="fs-4 fw-bold text-danger">🗑️ ELIMINAR PRODUCTO</p>
@@ -277,7 +280,7 @@
       var marcaProducto=document.getElementById("marca_producto")
       var txt_detalles=document.getElementById("text-detalles")
       var txt_observa=document.getElementById("text-observaciones")
-    //alert
+
       var prodLocal={
             id:"",
             nombre:"",
@@ -430,7 +433,6 @@
                       
       }
 
-
       /* Mostrar la operacion en un span cuando se pasa el mouse */
         
        document.body.addEventListener("mouseover",opc=>{
@@ -438,8 +440,6 @@
                 description.textContent=opc.target.dataset.img
             })
 
-        
-    
 
   </script>
 </body>

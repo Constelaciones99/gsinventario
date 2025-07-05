@@ -16,14 +16,64 @@
             font-family: Monaco;
             src: url(./../src/styles/fuentes/Monaco.ttf);
         }
+
+        colores{
+          colores:--var(
+            #d9ed92,
+          #b5e48c
+          ,#99d98c,
+          #76c893,
+          #52b69a,
+          #34a0a4,
+          #168aad,
+          #1a759f,
+          #1e6091,
+          #184e77,#a1ff0a)
+        }
+
         html{
             ::-webkit-scrollbar{
                 display: none
             };
         }
-        .card{
-            scale: .97;
+
+        header{
+            background: #537c9f;
         }
+
+        .card {
+            scale: .97;
+            border:#6b9ac4 .5px solid;
+        }
+
+        #nombre-productos{
+            font-family: arial;
+            background: #6b9ac4;
+            color: #fff;
+            /*box-shadow: 0px 0px .5px .5px #2a6f97 Buscar*/
+        }
+
+        label{
+            color: #3d5366 !important;
+        }
+
+        #btn-eliminar{
+            background: #537c9f;
+            border: 1px #537c9f solid;
+        }
+        #btn-editar{
+            background: #eff2f1;
+            border: 1px #537c9f solid;
+        }
+
+        #btn-ver{
+            background: #537c9f;
+            border:1px #537c9f solid
+        }
+
+        #contenidoCargado{
+        }
+
         img{
             cursor: pointer;
             transition: scale .5s;
@@ -36,7 +86,7 @@
         }
         input{
             outline: none;
-            border:2px #ac8504 solid;
+            border:none;
             /*text-transform: capitalize;*/
         }
         dialog{
@@ -59,12 +109,8 @@
             border: .2px solid;
             border-radius: 5px;
         }
-        .confirm-delete-text{
-        }
         #form-ver{
             line-height: 10px;
-        }
-        .ver-producto-texto{
         }
         ul li{
             list-style: none;
@@ -72,9 +118,7 @@
         #titulo-buscar{
             font-family: printer;
         }
-        #nombre-productos{
-            font-family: Monaco;
-        }
+        
         span#eliminar-id{
             text-transform: capitalize;
         }
@@ -104,10 +148,12 @@
         }
         #cerrar_carrusel{
             cursor: pointer;
+            width: 50px;   
+            float: left;
         }
 
         #badge{
-            box-shadow: 0px 0px 3px .5px #242424;
+            /*box-shadow: 0px 0px 3px .5px #242424;*/
             color:#242424
         }
 
@@ -125,32 +171,31 @@
             border: .2px solid #ddd;
             border-radius: 10px;
             padding: 8px;
-            /*box-shadow: 0px 2px 2.5px .2px #aaa,
-                            -2px 0px 2.5px .2px #eee inset,
-                            1px 0px 10px 1px #242424;
-            filter: drop-shadow(0px 1px #000);*/
             cursor: pointer;
             outline: none;
             appearance: none;
         }
 
-        select option:hover{
-            background: tomato;
+        select option:checked{
+            background: #6b9ac4;
         }
 
-        select option:checked{
-            background: #ffc107;
+        .card{
+            background: #fff;
+            /*box-shadow:0px 0px 5px 1px #fff,
+                        1px -1px 4px .5px #000   ;
+            filter:blur(.5px) drop-shadow(0px 1px #ddd)*/
         }
         </style>
 <body>
 
-    <div class="container">
-        <header class="bg-warning rounded-bottom-4 px-5">
+    <div class="container-fluid px-0">
+        <header class=" px-5">
             <p class="row">
 
                 <div class="col-12 btn-group w-100">
                     <div class="row">
-                        <p class="btn fs-2 text-white col-3 ps-0 ms-0" id="titulo-buscar">Buscar: </p>
+                        <p class="btn fs-2 text-white col-3 ps-0 ms-0" id="titulo-buscar">🔎 </p>
                     </div>
                     <p class="row btn d-flex justify-content-start pe-0">
                         <input type="text" class="ms-0 w-100 col-12 fs-3 rounded-2 pe-1" id="buscador"  placeholder="Nombre de producto, etc.">
@@ -162,7 +207,7 @@
         <span class="row w-50 ms-5">
 
             <span class="col-12 col-md-6 m-1 m-md-0 d-flex justify-content-center align-items-center">
-                <label for="filtro1" class="me-2 fw-bold">Categorias: </label>
+                <label for="filtro1" class="me-2 fw-bold" style=" font-size: 1.2rem;">Categorias: </label>
                 <select name="filtro1" id="selectCat">
                     <option value="--Todas las Categorias--" class="mx-5" selected>--Todas las Categorias--</option>
                     <option value="">periferico de entrada</option>
@@ -178,16 +223,7 @@
             </span>
 
             <span class="col-12 col-md-6 m-1 m-md-0 d-flex justify-content-center align-items-center">
-                <!-- <label for="filtro2" class="me-2 fw-bold">Marcas: </label>
-                <select name="filtro2" id="selectMarc">
-                    <option value="" selected >--Todas las marcas--</option>
-                    <option value="">Kingston</option>
-                    <option value="">Kingston</option>
-                    <option value="">Kingston</option>
-                    <option value="">Kingston</option>
-                    <option value="">Kingston</option>
-
-                </select> -->
+                
                 <input type="checkbox" id="cb_category">Ver todo según la categoría
             </span>
 
@@ -197,7 +233,7 @@
                     </ul>
             </div>
 
-        <div class="row" id="contenidoCargado">
+        <div class="row ms-2 me-2" id="contenidoCargado">
             
         </div>
     </div>
@@ -245,10 +281,11 @@
                     </ul>
                 </span>
                 <hr>
-                <span class="vw-100 text-start">Detalles:</span>
-                <textarea name="observacion" id="editar-observaciones" class="w-100" placeholder="observaciones"></textarea><br>
                 <span class="vw-100 text-start">Observaciones:</span>
-                <textarea name="detalles" id="editar-detalles" class="w-100" placeholder="detalles"></textarea><br>
+                <textarea name="observacion" id="editar-detalles" class="w-100" placeholder="observaciones"></textarea><br>
+                <hr>
+                <span class="vw-100 text-start">Detalles:</span>
+                <textarea name="detalles" id="editar-observaciones" class="w-100" placeholder="detalles"></textarea><br>
                 <hr>
                 <button  class="btn btn-secondary" id="cerrarDialogEdit">CERRAR</button>
                 <input  class="btn btn-success" id="editBtn" value="GUARDAR CAMBIOS" >
@@ -278,18 +315,10 @@
 
     <dialog id="dialog-carrusel">
         <p class="text-end text-secondary me-3 fw-bold fs-3" id="cerrar_carrusel">✕</p>   
-        <div id="carouselExampleIndicators" class="carousel slide">
-        <div id="carousel-inner">
+        <div id="carouselExampleIndicators" class=" carousel slide p-0 m-0">
+        <div id="carousel-inner" class="">
             
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon bg-secondary" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
         </div>
     </dialog>
 
@@ -312,58 +341,52 @@
         var cbCategoria=document.getElementById("cb_category")
 
         var colores=["success","warning","danger","primary","secondary","info","dark"]
-        
-       
-
+        //rut
         window.addEventListener("DOMContentLoaded", resp=>{
             listaProd((querySnapshot)=>{
                  let html=""
+                 let value=0 //Cantidad de veces que da una vuelta
                 querySnapshot.forEach((doc)=>{
                     html +=`
-                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2">
+                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3" id="card-prod">
                 <div class="row d-flex justify-content-center  rounded-2">
-                        <span class=" border
-                        border-secondary border-top-0 
-                        border-start-0
-                        border-end-0
-                        border-bottom-1
-                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
+                        <span class="
+                        rounded-top-2 text-center fw-bold py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
                         <span id="id_hidden">${doc.id}</span>
                         <img src=${doc.data().imagenes["principal"]} class="py-1" style="width: 8rem;" data-ima="${doc.id}" id="btnImage">
                 </div>
                 <div class="row rounded-2 p-0">
                     <span class="btn-group">
-                        <p class="col-4 border btn btn-danger fw-bold"  id="btn-eliminar" data-eliminar="${doc.id}">🗑️</p>
-                        <p class="col-4 border btn btn-success fw-bold" id="btn-editar" data-editar="${doc.id}">✍️</p>
-                        <p class="col-4 border btn btn-primary fw-bold" id="btn-ver" data-ver="${doc.id}" >👁️‍🗨️</p>
+                        <p class="col-4  btn btn-danger fw-bold"  id="btn-eliminar" data-eliminar="${doc.id}">🗑️</p>
+                        <p class="col-4 btn btn-success fw-bold" id="btn-editar" data-editar="${doc.id}">✍️</p>
+                        <p class="col-4  btn btn-primary fw-bold" id="btn-ver" data-ver="${doc.id}" >👁️‍🗨️</p>
                     </span>
                 </div>
             </div>
             `           
-                    
             cont.innerHTML=html
             
-            var sliderhtml=""
             document.querySelectorAll("#btnImage").forEach((img)=>{
                 img.addEventListener("click", function(evt){
                     document.getElementById("dialog-carrusel").showModal()
-                    sliderhtml=""
-                querySnapshot.forEach((doc)=>{
-                    if(doc.id==evt.target.dataset.ima){
-                        doc.data().imagenes.otras.forEach(dat=>{
-                            sliderhtml +=`
-                        <div class="carousel-item">
-                            <img src="./../src/styles/img/${dat}" class="d-block">
+                    try {
+                        slider.innerHTML=""
+                        querySnapshot.forEach((doc)=>{
+                    //alert(doc.id)
+                        if(doc.id==img.dataset.ima){
+                            //alert(doc.data().imagenes.principal)
+                                slider.innerHTML =`
+                        <div class="w-100 h-100 px-0 active d-flex justify-content-center">
+                            <img src='${doc.data().imagenes.principal}' class="w-100 h-100 mt-5"  style="">
                         </div>
                     `
-                        })
-                        slider.innerHTML=sliderhtml
-                        document.querySelectorAll(".carousel-item")[0].classList.add("active")
+                        }
+                   })   
+                    } catch (error) {
+                        alert(error)
                     }
                 })
-                })
             })
-
            
 
             document.querySelectorAll("#btn-ver").forEach(elementVer=>{
@@ -443,15 +466,21 @@
                 })
             })
 
-
+            value++
             
         })
+
+
+
+
+
     })
 })
 
 
         document.getElementById("cerrar_carrusel").addEventListener("click",function(){
-                document.getElementById("dialog-carrusel").close()
+            //alert("carrusel cerrado!")    
+            document.getElementById("dialog-carrusel").close()
 
         })
 
@@ -545,7 +574,7 @@
                     fecha:new Date()
                 })
                     alert("producto actualizado!")
-                    window.location.reload()
+                    //window.location.reload()
                     cerrar()
             }catch(error){
                 alert(error)
@@ -563,6 +592,7 @@
                     imagenes:{"principal":imagenUrl, "otras":["raton.png","raton(1).png"]},
                     fecha:new Date()
                 })
+                    document.getElementById("changePhoto").value=""
                     alert("producto actualizado!")
                     cerrar()
             }catch(error){
@@ -571,7 +601,6 @@
             }
         })
 
-       
 
         closeDialogDel.addEventListener("click",(e)=>{
             cerrar(e)
@@ -590,14 +619,139 @@
             contenido_buscar.disabled=false
 
             if(this.value=="--Todas las Categorias--"){
-                window.location.reload()
+                cont.innerHTML=""
+                listaProd((querySnapshot)=>{
+                
+                querySnapshot.forEach((doc)=>{
+                    querySnapshot.forEach((doc)=>{
+                    html +=`
+                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3" id="card-prod">
+                <div class="row d-flex justify-content-center  rounded-2">
+                        <span class="
+                        rounded-top-2 text-center fw-bold py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
+                        <span id="id_hidden">${doc.id}</span>
+                        <img src=${doc.data().imagenes["principal"]} class="py-1" style="width: 8rem;" data-ima="${doc.id}" id="btnImage">
+                </div>
+                <div class="row rounded-2 p-0">
+                    <span class="btn-group">
+                        <p class="col-4 border btn btn-danger fw-bold"  id="btn-eliminar" data-eliminar="${doc.id}">🗑️</p>
+                        <p class="col-4 border btn btn-success fw-bold" id="btn-editar" data-editar="${doc.id}">✍️</p>
+                        <p class="col-4 border btn btn-primary fw-bold" id="btn-ver" data-ver="${doc.id}" >👁️‍🗨️</p>
+                    </span>
+                </div>
+            </div>
+            `           
+            cont.innerHTML=html
+            
+            document.querySelectorAll("#btnImage").forEach((img)=>{
+                img.addEventListener("click", function(evt){
+                    document.getElementById("dialog-carrusel").showModal()
+                    try {
+                        slider.innerHTML=""
+                        querySnapshot.forEach((doc)=>{
+                    //alert(doc.id)
+                        if(doc.id==img.dataset.ima){
+                            //alert(doc.data().imagenes.principal)
+                                slider.innerHTML =`
+                        <div class="w-100 h-100 px-0 active d-flex justify-content-center">
+                            <img src='${doc.data().imagenes.principal}' class="w-100 h-100 mt-5"  style="">
+                        </div>
+                    `
+                        }
+                   })   
+                    } catch (error) {
+                        alert(error)
+                    }
+                })
+            })
+           
+
+            document.querySelectorAll("#btn-ver").forEach(elementVer=>{
+              elementVer.addEventListener("click",({target:{dataset}})=>{
+
+                  document.getElementById("ver-categorias").innerHTML=""
+              document.getElementById("dialog-ver").showModal();
+
+              querySnapshot.forEach((doc)=>{
+              if(doc.id==dataset.ver){
+
+              document.getElementById("ver-id").textContent=doc.id
+              document.getElementById("ver-foto").src=doc.data().imagenes["principal"]
+              document.getElementById("ver-nombre").value=doc.data().nombre
+              document.getElementById("ver-marca").value=doc.data().marca
+              document.getElementById("ver-cantidad").value=doc.data().cantidad
+              document.getElementById("ver-detalles").textContent=doc.data().detalles
+              document.getElementById("ver-observaciones").textContent=doc.data().observacion
+
+              doc.data().categoria.forEach((badge)=>{
+                      document.getElementById("ver-categorias").innerHTML +=`
+                      <span id="badge" class="badge text-bg-${colores[Math.trunc(Math.random(0,6)*10)]}">${badge}</span>
+                  `
+                          })
+                      }
+                  })
+              })
+          })
+
+            document.querySelectorAll("#btn-eliminar").forEach((element)=>{
+          element.addEventListener("click",({target:{dataset}})=>{
+          document.getElementById("dialog-eliminar").showModal()
+          querySnapshot.forEach((doc)=>{
+              if(doc.id==dataset.eliminar){
+                  document.getElementById("eliminar-id").textContent=doc.id
+                  document.getElementById("eliminar-nombre").textContent=doc.data().nombre
+                      }
+                  })
+              })
+          })
+
+          //BTN-EDITAR
+            document.querySelectorAll("#btn-editar").forEach(elementEdit=>{
+
+                document.querySelectorAll(".cat").forEach((gato)=>{
+                    gato.checked=false
+                })
+
+
+            elementEdit.addEventListener("click",({target:{dataset}})=>{
+              document.getElementById("dialog-editar").showModal();
+
+              document.querySelectorAll(".cat").forEach((pro)=>{
+                    pro.checked=false
+            })
+                
+              querySnapshot.forEach((doc)=>{
+              if(doc.id==dataset.editar){
+                  document.getElementById("editar-id").textContent=doc.id
+                  document.getElementById("editar-foto").src=doc.data().imagenes["principal"]
+                  document.getElementById("editar-nombre").value=doc.data().nombre
+                  document.getElementById("editar-marca").value=doc.data().marca
+                  document.getElementById("editar-cantidad").value=doc.data().cantidad
+                  document.getElementById("editar-detalles").textContent=doc.data().detalles
+                  document.getElementById("editar-observaciones").textContent=doc.data().observacion
+                    
+
+                document.querySelectorAll(".cat").forEach((gato)=>{
+                            doc.data().categoria.forEach((y)=>{
+                                if(y==gato.dataset.categoria){
+                                    gato.checked=true
+                                    }
+                                })
+                            })
+                        }
+                    })
+                })
+            })
+
+
+            
+        })
+                })
+            })
+                
             }
         }
         
-
-
-
-
         var html2=""
         cbCategoria.addEventListener("change",function(){
             contenido_buscar.disabled=this.checked
@@ -613,14 +767,10 @@
                     doc.data().categoria.forEach(productoC=>{
                         if(productoC==document.getElementById("selectCat").selectedOptions[0].label){
                              html2 +=`
-                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2"} >
+                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3"} id="card-prod">
                 <div class="row d-flex justify-content-center  rounded-2">
-                        <span class=" border
-                        border-secondary border-top-0 
-                        border-start-0
-                        border-end-0
-                        border-bottom-1
-                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
+                        <span class="
+                        rounded-top-2 text-center fw-bold py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
                         <span id="id_hidden">${doc.id}</span>
                         <img src=${doc.data().imagenes["principal"]} class="py-1" style="width: 8rem;" data-img="${doc.id}" id="btnImage">
                 </div>
@@ -734,27 +884,18 @@
                     })
                 })
             })
-
-
-
-
-
-
-          
                 })
             })
         })
 
-
-
         let memo=0
+        var html=""
         contenido_buscar.addEventListener("keyup",function(e){
             var filtroCategoria=document.getElementById("selectCat")
             var filtroMarca=document.getElementById("selectMarc")
-            
-            var html=""
+            html=""
             if(e.keyCode==8 && contenido_buscar.value==""){
-                window.location.reload()
+                //window.location.reload()
             }
             //evitar que se pegue un texto(Ctrl+v)
             if(e.keyCode==17){
@@ -774,16 +915,12 @@
                     if(doc.data().nombre.slice(0,memo)==contenido_buscar.value){
                         
                          if(filtroCategoria.selectedOptions[0].label=="--Todas las Categorias--" || contenido_buscar.value==""){
-                                filtroCategoria.value="--Todas las Categorias--"
+                                //filtroCategoria.value="--Todas las Categorias--"
                                 html +=`
-                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2"} >
+                    <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3"} >
                 <div class="row d-flex justify-content-center  rounded-2">
-                        <span class=" border
-                        border-secondary border-top-0 
-                        border-start-0
-                        border-end-0
-                        border-bottom-1
-                        rounded-top-2 text-center fw-bold bg-warning py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
+                        <span class="
+                        rounded-top-2 text-center fw-bold py-1 fs-4" id="nombre-productos"> ${doc.data().nombre} </span>
                         <span id="id_hidden">${doc.id}</span>
                         <img src=${doc.data().imagenes["principal"]} class="py-1" style="width: 8rem;" data-img="${doc.id}" id="btnImage">
                 </div>
@@ -798,12 +935,8 @@
             `    
                             }
 
-
-
                         doc.data().categoria.forEach((item)=>{
-
                         if(filtroCategoria.selectedOptions[0].label==item ){
-
                     html +=`
                     <div class="card col-6 col-md-4 col-lg-3 col-xxl-2 rounded-3 border border-warning border-2"} >
                 <div class="row d-flex justify-content-center  rounded-2">
@@ -892,7 +1025,6 @@
           })
 
              document.querySelectorAll("#btn-editar").forEach(elementEdit=>{
-
                 document.querySelectorAll(".cat").forEach((gato)=>{
                     gato.checked=false
                 })
@@ -920,28 +1052,18 @@
                             doc.data().categoria.forEach((y)=>{
                                 if(y==gato.dataset.categoria){
                                     gato.checked=true
-                                    }
-                                })
+                                            }
+                                        })
+                                    })
+                                }
                             })
-                        }
+                        })
                     })
                 })
-            })
-
-
-
-                    
-                    /* */
-                })
-                
-                
             }
         })
-        
-        
     })
 })
-
 
     </script>
     

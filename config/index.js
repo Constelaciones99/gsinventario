@@ -106,11 +106,11 @@ form_add.addEventListener("submit", async (event) => {
     document.getElementById("selects").value=JSON.stringify(["sin categorias"])
     nombre_producto.disabled=true
     alert("Producto guardado exitosamente");
-    window.location.reload()
+    //window.location.reload()
     //cerrarDialog('agregar');
     
   } catch (error) {
-    alert("Error en el proceso completo:", error);
+    alert("Error en el proceso completo:", error.message);
     alert(`Error: ${error.message}`);
   } finally {
     showLoading(false);

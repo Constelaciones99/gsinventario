@@ -334,10 +334,7 @@
             elementEdit.addEventListener("click",({target:{dataset}})=>{
               document.getElementById("dialog-editar").showModal();
 
-              document.querySelectorAll(".cat").forEach((pro)=>{
-                    pro.checked=false
-            })
-                
+              
               
                   document.getElementById("editar-id").textContent=miProducto.id
                   document.getElementById("editar-foto").src=miProducto.imagenes["principal"]
@@ -349,8 +346,9 @@
                     
 
                     document.querySelectorAll(".cat").forEach((gato)=>{
-                            miProducto.categoria.forEach((y)=>{
-                                if(y==gato.dataset.categoria){
+                        
+                        miProducto.categoria.forEach((y)=>{
+                                if(gato.dataset.categoria==y){
                                     gato.checked=true
                                     }
                                 })
