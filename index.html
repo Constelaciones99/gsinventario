@@ -50,6 +50,7 @@
       border-radius: 0.5rem;
       padding: 1rem;
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      scrollbar-width: none;
     }
 
     #verTodo{
@@ -168,8 +169,8 @@
       <form class="" enctype="multipart/form-data" id="form-agregar">
                     <h5 class="fw-bold text-center">AGREGAR PRODUCTO</h5>
                     <hr>
-                       <input type='text' name='id_prod' class='form-control mb-2 fw-bold' value="PROD-001" disabled>
-                    <label>Seleccionar producto:</label>
+                       <!-- <input type='text' name='id_prod' class='form-control mb-2 fw-bold' value="PROD-001" disabled> -->
+                    <label class="mb-2">Seleccionar producto:</label>
                     <select class="form-select mb-2"  id="select_producto-prod" name="select_prod">
                     <option value="">--Seleccionar--</option>
                     <option>mouse</option>
@@ -209,7 +210,7 @@
                     <div class="d-flex justify-content-end mb-2">
                       <hr>
                     <!-- <button class="btn btn-success"></button> name_prod-->
-                     <input type="file" value="AGREGAR FOTO 📷" class="btn btn-success" id="inptFile" name="foto">
+                     <input type="file" value="AGREGAR FOTO 📷" class="btn" id="inptFile" name="foto">
                     <hr>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -229,6 +230,7 @@
         <option>sin conexion</option>
       </select>
       <select class="form-select mb-2" id="ListProp" disabled>
+        <option selected disabled>--Selecciona Propiedad--</option>
         <option>nombre</option>
         <option>marca</option>
         <option>cantidad</option>
@@ -236,7 +238,8 @@
         <option>observacion</option>
 
       </select>
-      <input type="text" class="form-control mb-2" id="newValue" placeholder="Nuevo valor">
+      <input type="text" class="form-control mb-2" id="oldValue"  placeholder="Valor anterior" disabled>
+      <input type="text" class="form-control mb-2" id="newValue" disabled placeholder="Nuevo valor">
       <div class="text-end">
         <button class="btn btn-secondary" id="cerrarDialog" data-cerrar="editar">Cancelar</button>
         <button class="btn btn-primary" id="btnUpdate">Actualizar</button>
@@ -274,6 +277,7 @@
       var items=document.getElementById("selects")
       var title_prod=document.getElementById("id_prod_edit")
       var newValueProd=document.getElementById("newValue")
+      var oldValueProd=document.getElementById("oldValue")
       var description=document.getElementById("descripcion")
       var keyNameProd=document.getElementById("text_prod")
       var btnSearchProd=document.getElementById("btnQuerySearch")
@@ -409,6 +413,30 @@
                         })
                       })
 
+      /*EDITAR PRODUCTO*/         
+
+            newValueProd.addEventListener("keyup", function(){
+                if(newValueProd.value.length>0){
+                  newValueProd.style.border="2px solid #198754"
+                }else{
+                  newValueProd.style.border="2px solid #dc3545"
+                }
+            })
+
+      
+      cb_propiedades_edit.addEventListener("change", function(){
+            listaProd((querySnapshot)=>{
+                querySnapshot.forEach(doc=>{
+                  if(title_prod.value==doc.id){
+                   var olds= doc.data()[cb_propiedades_edit.value]
+                    oldValueProd.value=olds
+                  }
+                })
+            })
+
+            newValueProd.disabled=false
+      })
+
       document.getElementById("btnUpdate").onclick=async ()=>{
               var props=[
                 {nombre:"Alina"},
@@ -425,7 +453,11 @@
                 await updateDoc(docRef,props[cb_propiedades_edit.selectedIndex])
                 title_prod.value="ID"
                 newValueProd.value=""
+                oldValueProd.value=""
+                cb_propiedades_edit.value="--Selecciona Propiedad--"
               cb_propiedades_edit.disabled=true
+            newValueProd.disabled=true
+                  newValueProd.style.border="2px solid #ccc"
                 alert("Producto Editado!")
               }catch(error){
                  // alert(error)throw nombre_producto
